@@ -18,7 +18,7 @@ import glob
 
 def read_screenshots():
     images = []
-    for cnt, im_path in enumerate(glob.glob('/Users/calebjonesshibu/Desktop/tom/pilot/exp_2022_11_08_11/tiger/screenshots/*.*')):
+    for cnt, im_path in enumerate(glob.glob('/Users/calebjonesshibu/Desktop/tom/exp_2023_02_03_10/tiger/screenshots/screenshots/*.*')):
         if cnt == 50:
             break
         images.append(cv2.imread(im_path))
