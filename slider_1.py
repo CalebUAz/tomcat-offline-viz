@@ -54,7 +54,7 @@ class Window(QWidget):
         start = time.process_time()
 
         rgb_image = cv2.cvtColor(self.screenshots[value], cv2.COLOR_BGR2RGB)
-        print(self.x[value], self.y[value])
+        # print(self.x[value], self.y[value])
         cv2.circle(rgb_image, (int(self.x[value]), int(self.y[value])), 5, (255, 0, 0), 2)
 
         h, w, ch = rgb_image.shape
