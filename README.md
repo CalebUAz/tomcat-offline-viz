@@ -18,3 +18,6 @@ python3 screenshot_eye_track_slider.py
 ```bash
 python3 fnirs_slider.py
 ```
+
+## Demo:
+Screen recording of screenshot_eye_track_slider.py and fnirs_slider.py can be viewed in the demo folder. 

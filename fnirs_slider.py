@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QSlider, QLabel
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel
 from PyQt5.QtCore import Qt
 import pyqtgraph as pg
 import sys
@@ -35,24 +35,36 @@ class MainWindow(QtWidgets.QMainWindow):
         self.data1 = data.iloc[:,1:21]
         self.data2 = data.iloc[:,21:41]
 
-        print(self.data1)
-
         # initialize plots
         super(MainWindow, self).__init__()
 
+        # Create main layout
+        self.mainLayout = QVBoxLayout()
+
+        # Create and configure the plots layout
         self.graphWidgetLayout = pg.GraphicsLayoutWidget()
         self.graphWidgetLayout.resize(1000, 2500)
-        self.setCentralWidget(self.graphWidgetLayout)
 
+        # Create and configure the slider layout
+        self.sliderLayout = QHBoxLayout()
         self.slider = QSlider(Qt.Horizontal, self)
         self.slider.setTickInterval(1)
-
         self.slider.setMinimum(0)
         self.slider.setMaximum(1000)
-        self.slider.setGeometry(50, 1200, 1000, 20)
         self.slider.valueChanged.connect(self.update_plot_data)
         self.slider.setTickPosition(QSlider.TicksBelow)
-        # Enable antialiasing for prettier plots
+        self.sliderLayout.addWidget(self.slider)
+
+        # Add the plots and slider layouts to the main layout
+        self.mainLayout.addWidget(self.graphWidgetLayout)
+        self.mainLayout.addLayout(self.sliderLayout)
+
+        # Set the main layout as the central widget
+        self.centralWidget = QWidget()
+        self.centralWidget.setLayout(self.mainLayout)
+        self.setCentralWidget(self.centralWidget)
+
+         # Enable antialiasing for prettier plots
 
         pg.setConfigOptions(antialias=True)
 

@@ -2,3 +2,4 @@ __pycache__/
 **/.pyc
 .DS_Store
 EEG_slider.py
+test.py
