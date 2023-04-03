@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets, QtCore
-from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QSlider, QLabel
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel
 from PyQt5.QtCore import Qt
 import pyqtgraph as pg
 import sys
@@ -76,33 +76,43 @@ class MainWindow(QtWidgets.QMainWindow):
         self.channel_indices = [data.columns.get_loc(channel) for channel in self.channels_used]
 
         self.data1 = data.iloc[:, self.channel_indices]
-        # self.data2 = data.iloc[:,21:41]
-
-        print(self.data1.shape)
 
         # initialize plots
         super(MainWindow, self).__init__()
 
+        # Create main layout
+        self.mainLayout = QVBoxLayout()
+
+        # Create and configure the plots layout
         self.graphWidgetLayout = pg.GraphicsLayoutWidget()
         self.graphWidgetLayout.resize(1000, 2500)
-        self.setCentralWidget(self.graphWidgetLayout)
 
+        # Create and configure the slider layout
+        self.sliderLayout = QHBoxLayout()
         self.slider = QSlider(Qt.Horizontal, self)
         self.slider.setTickInterval(1)
-
         self.slider.setMinimum(0)
         self.slider.setMaximum(1000)
-        self.slider.setGeometry(50, 1200, 1000, 20)
         self.slider.valueChanged.connect(self.update_plot_data)
         self.slider.setTickPosition(QSlider.TicksBelow)
-        # Enable antialiasing for prettier plots
+        self.sliderLayout.addWidget(self.slider)
+
+        # Add the plots and slider layouts to the main layout
+        self.mainLayout.addWidget(self.graphWidgetLayout)
+        self.mainLayout.addLayout(self.sliderLayout)
+
+        # Set the main layout as the central widget
+        self.centralWidget = QWidget()
+        self.centralWidget.setLayout(self.mainLayout)
+        self.setCentralWidget(self.centralWidget)
+
+         # Enable antialiasing for prettier plots
 
         pg.setConfigOptions(antialias=True)
 
         self.graphWidgetLayout.setBackground("w")
 
-        self.pen = pg.mkPen(color=(0, 0, 0), width=2)  # red for HbO
-        # self.pen1 = pg.mkPen(color=(0, 0, 255), width=2)  # blue for HbR
+        self.pen = pg.mkPen(color=(255,255,255), width=2)  # black
 
         self.ch = []
         # self.ch1 = []
@@ -132,7 +142,7 @@ class MainWindow(QtWidgets.QMainWindow):
             if self.idx < n_channels - 1:
                 self.channel.hideAxis("bottom")
 
-            self.channel.setLabel("left", self.channels_used[self.idx], **label_style)
+            self.channel.setLabel("left", self.channel_list[self.idx], **label_style)
 
             self.ch.append(self.channel)
             # self.ch1.append(self.channel)
@@ -155,45 +165,62 @@ class MainWindow(QtWidgets.QMainWindow):
     def update_slider_value(self, value):
         self.slider_value = value
         
-
     def update_plot_data(self, value):
         self.slider_value = value
-        # update data
 
-        if len(self.x) >= 100:
-            self.x = self.x[1:]  # Remove the first x element.
+        window_size = 1000
+        start = max(0, int(len(self.data1) * (self.slider_value / 1000) - window_size // 2))
+        end = min(len(self.data1), start + window_size)
 
-            for i in range(len(self.channels_used)):
-                self.y[i] = self.y[i][1:]  # Remove the first
-                # self.y1[i] = self.y1[i][1:]  # Remove the first
+        self.x = list(range(start, end))
 
-        # Get the next chunk of samples from LSL.
-        # They were accumulated while we were plotting the previous chunk
-        # sample, time = self.inlet.pull_chunk()
+        for i in range(len(self.channels_used)):
+            self.y[i] = self.data1.iloc[start:end, i].tolist()
+            # self.y1[i] = self.data2.iloc[start:end, i].tolist()
 
-        if len(self.data1) > 0:
-            # Plot the most recent sample of this chunk. Discard the rest
+        for i in range(0, len(self.channels_used)):
+            self.dataLine[i][0].setData(self.x, self.y[i])
+            # self.dataLine1[i][0].setData(self.x, self.y1[i])
 
-            # Update the x value according to the number of samples we skipped
-            self.x.append(self.x[-1] + len(self.data1.iloc[-1].values))
+    # def update_plot_data(self, value):
+    #     self.slider_value = value
+    #     # update data
 
-            # Append the last sample
-            for i in range(len(self.channels_used)):
-                self.y[i].append(self.data1.iloc[-1][i])
-                print(self.y[i])
-                # print(self.data1[-1][i], self.data2[-1][i])
-            #     if self.slider_value == 0:
-            #         # print('Im less than 0')
-            #         self.y[i].append(self.data1.iloc[-1][i])
+    #     if len(self.x) >= 100:
+    #         self.x = self.x[1:]  # Remove the first x element.
 
-            #     else:
-            #         # print('Im greater than 0')
-            #         start = int(len(self.data1) * (self.slider_value / 1000))
-            #         end = int(len(self.data1) * ((self.slider_value + 1) / 1000)) 
-            #         self.y[i].append(self.data1.iloc[start:end, i].mean())
-                    
-            # for i in range(0, len(self.channels_used)):
-            #     self.dataLine[i][0].setData(self.x, self.y[i])
+    #         for i in range(len(self.channel_list)):
+    #             self.y[i] = self.y[i][1:]  # Remove the first
+    #             self.y1[i] = self.y1[i][1:]  # Remove the first
+
+    #     # Get the next chunk of samples from LSL.
+    #     # They were accumulated while we were plotting the previous chunk
+    #     # sample, time = self.inlet.pull_chunk()
+
+    #     if len(self.data1) > 0:
+    #         # Plot the most recent sample of this chunk. Discard the rest
+
+    #         # Update the x value according to the number of samples we skipped
+    #         self.x.append(self.x[-1] + len(self.data1.iloc[-1].values))
+
+    #         # Append the last sample
+    #         for i in range(len(self.channel_list)):
+    #             # print(self.data1[-1][i], self.data2[-1][i])
+    #             if self.slider_value == 0:
+    #                 print('Im less than 0')
+    #                 self.y[i].append(self.data1.iloc[-1][i])
+    #                 self.y1[i].append(self.data2.iloc[-1][i])
+    #             else:
+    #                 print('Im greater than 0')
+    #                 start = int(len(self.data1) * (self.slider_value / 1000))
+    #                 end = int(len(self.data1) * ((self.slider_value + 1) / 1000))
+    #                 self.y[i].append(self.data1.iloc[start:end, i].mean())
+    #                 self.y1[i].append(self.data2.iloc[start:end, i].mean())
+    #                 print(self.data1.iloc[start:end, i], self.data2.iloc[start:end, i])
+
+    #         for i in range(0, len(self.channel_list)):
+    #             self.dataLine[i][0].setData(self.x, self.y[i])
+    #             self.dataLine1[i][0].setData(self.x, self.y1[i])
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
