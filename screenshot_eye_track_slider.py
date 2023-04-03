@@ -22,6 +22,7 @@ class Window(QWidget):
     def InitWindow(self):
         hbox = QHBoxLayout()
         min, max, self.screenshots = read_screenshots()
+        print(min, max)
 
         self.x, self.y, point_scale, id_labels = read_pupil_data()
 
@@ -55,7 +56,11 @@ class Window(QWidget):
 
         rgb_image = cv2.cvtColor(self.screenshots[value], cv2.COLOR_BGR2RGB)
         # print(self.x[value], self.y[value])
-        cv2.circle(rgb_image, (int(self.x[value]), int(self.y[value])), 5, (255, 0, 0), 2)
+        x_value = self.x.get(value, None)
+        y_value = self.y.get(value, None)
+
+        if x_value is not None and y_value is not None:
+            cv2.circle(rgb_image, (int(x_value), int(y_value)), 5, (255, 0, 0), 2)
 
         h, w, ch = rgb_image.shape
         bytes_per_line = ch * w
