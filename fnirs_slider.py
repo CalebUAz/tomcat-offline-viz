@@ -124,46 +124,62 @@ class MainWindow(QtWidgets.QMainWindow):
     def update_slider_value(self, value):
         self.slider_value = value
         
-
     def update_plot_data(self, value):
         self.slider_value = value
-        # update data
 
-        if len(self.x) >= 100:
-            self.x = self.x[1:]  # Remove the first x element.
+        window_size = 1000
+        start = max(0, int(len(self.data1) * (self.slider_value / 1000) - window_size // 2))
+        end = min(len(self.data1), start + window_size)
 
-            for i in range(len(self.channel_list)):
-                self.y[i] = self.y[i][1:]  # Remove the first
-                self.y1[i] = self.y1[i][1:]  # Remove the first
+        self.x = list(range(start, end))
 
-        # Get the next chunk of samples from LSL.
-        # They were accumulated while we were plotting the previous chunk
-        # sample, time = self.inlet.pull_chunk()
+        for i in range(len(self.channel_list)):
+            self.y[i] = self.data1.iloc[start:end, i].tolist()
+            self.y1[i] = self.data2.iloc[start:end, i].tolist()
 
-        if len(self.data1) > 0:
-            # Plot the most recent sample of this chunk. Discard the rest
+        for i in range(0, len(self.channel_list)):
+            self.dataLine[i][0].setData(self.x, self.y[i])
+            self.dataLine1[i][0].setData(self.x, self.y1[i])
 
-            # Update the x value according to the number of samples we skipped
-            self.x.append(self.x[-1] + len(self.data1.iloc[-1].values))
+    # def update_plot_data(self, value):
+    #     self.slider_value = value
+    #     # update data
 
-            # Append the last sample
-            for i in range(len(self.channel_list)):
-                # print(self.data1[-1][i], self.data2[-1][i])
-                if self.slider_value == 0:
-                    print('Im less than 0')
-                    self.y[i].append(self.data1.iloc[-1][i])
-                    self.y1[i].append(self.data2.iloc[-1][i])
-                else:
-                    print('Im greater than 0')
-                    start = int(len(self.data1) * (self.slider_value / 1000))
-                    end = int(len(self.data1) * ((self.slider_value + 1) / 1000))
-                    self.y[i].append(self.data1.iloc[start:end, i].mean())
-                    self.y1[i].append(self.data2.iloc[start:end, i].mean())
-                    print(self.data1.iloc[start:end, i], self.data2.iloc[start:end, i])
+    #     if len(self.x) >= 100:
+    #         self.x = self.x[1:]  # Remove the first x element.
 
-            for i in range(0, len(self.channel_list)):
-                self.dataLine[i][0].setData(self.x, self.y[i])
-                self.dataLine1[i][0].setData(self.x, self.y1[i])
+    #         for i in range(len(self.channel_list)):
+    #             self.y[i] = self.y[i][1:]  # Remove the first
+    #             self.y1[i] = self.y1[i][1:]  # Remove the first
+
+    #     # Get the next chunk of samples from LSL.
+    #     # They were accumulated while we were plotting the previous chunk
+    #     # sample, time = self.inlet.pull_chunk()
+
+    #     if len(self.data1) > 0:
+    #         # Plot the most recent sample of this chunk. Discard the rest
+
+    #         # Update the x value according to the number of samples we skipped
+    #         self.x.append(self.x[-1] + len(self.data1.iloc[-1].values))
+
+    #         # Append the last sample
+    #         for i in range(len(self.channel_list)):
+    #             # print(self.data1[-1][i], self.data2[-1][i])
+    #             if self.slider_value == 0:
+    #                 print('Im less than 0')
+    #                 self.y[i].append(self.data1.iloc[-1][i])
+    #                 self.y1[i].append(self.data2.iloc[-1][i])
+    #             else:
+    #                 print('Im greater than 0')
+    #                 start = int(len(self.data1) * (self.slider_value / 1000))
+    #                 end = int(len(self.data1) * ((self.slider_value + 1) / 1000))
+    #                 self.y[i].append(self.data1.iloc[start:end, i].mean())
+    #                 self.y1[i].append(self.data2.iloc[start:end, i].mean())
+    #                 print(self.data1.iloc[start:end, i], self.data2.iloc[start:end, i])
+
+    #         for i in range(0, len(self.channel_list)):
+    #             self.dataLine[i][0].setData(self.x, self.y[i])
+    #             self.dataLine1[i][0].setData(self.x, self.y1[i])
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
