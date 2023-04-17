@@ -1,9 +1,10 @@
 import pandas as pd
 from pathlib import Path
+import os
 
 def read_pupil_data():
-    recording_location = Path("/Users/calebjonesshibu/Desktop/tom/exp_2023_02_03_10/tiger/pupil_recorder/")
-    surface_fixation_export = recording_location / "surfaces" / "fixations_on_surface_tiger_surface.csv"
+    cwd = os.getcwd()
+    surface_fixation_export = os.path.join(cwd, "data/Gaze/surfaces/fixations_on_surface_tiger_surface.csv")
 
     surface_df = pd.read_csv(surface_fixation_export)
     fixation_on_surf = surface_df[surface_df.on_surf == True]

@@ -8,6 +8,7 @@ from utils import read_screenshots, read_pupil_data
 import time
 import cv2
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QTabWidget, QTextEdit, QPushButton
 
 class Window(QWidget):
     def __init__(self):
@@ -20,34 +21,52 @@ class Window(QWidget):
         self.InitWindow()
 
     def InitWindow(self):
-        hbox = QHBoxLayout()
         min, max, self.screenshots = read_screenshots()
         print(min, max)
 
         self.x, self.y, point_scale, id_labels = read_pupil_data()
 
+        hbox = QHBoxLayout()
+
+        # Create a vertical layout for the button
+        vbox = QVBoxLayout()
+
+        self.slider = QSlider(Qt.Horizontal, self)
+        self.slider.setTickInterval(1)
+
+        # create the tab widget and add it to the layout
+        self.tab_widget = QTabWidget()
+        vbox.addWidget(self.tab_widget)
+
+        self.slider.setMinimum(min)
+        self.slider.setMaximum(max)
+        self.slider.setGeometry(150, 80, 1000, 20)
+        self.slider.sliderMoved[int].connect(self.changedValue)
+        self.slider.setTickPosition(QSlider.TicksBelow)
+
         self.slider_text = QLabel(self)
-        self.slider_text.setGeometry(100, 830, 900, 20)
+        self.tab_widget.addTab(self.slider_text, "Subject-1")
+        self.slider_text.setGeometry(100, 860, 900, 20)
 
         self.ScreenShot = QLabel(self)
         # self.ScreenShot.setPixmap(QPixmap(self.screenshots[0]))
         self.ScreenShot.setGeometry(60, 60, 1280, 720)
-        
-        self.slider = QSlider(Qt.Horizontal, self)
-        self.slider.setTickInterval(1)
 
-        self.slider.setMinimum(min)
-        self.slider.setMaximum(max)
-        self.slider.setGeometry(100, 830, 1000, 20)
-        self.slider.sliderMoved[int].connect(self.changedValue)
-        self.slider.setTickPosition(QSlider.TicksBelow)
+        # Add the slider to the vertical layout
+        vbox.addWidget(self.slider)
+        # Add the vertical layout to the horizontal layout
+        hbox.addLayout(vbox)
 
         self.setWindowIcon(QtGui.QIcon("icon.png"))
         self.setWindowTitle(self.title)
         self.setGeometry(self.top, self.left, self.width, self.height)
 
+        self.tab2 = QPushButton("Click me")
+        self.tab_widget.addTab(self.tab2, "Subject-2")
+
         self.setLayout(hbox)
-        self.setGeometry(self.left, self.top, self.width, self.height)
+        # self.setGeometry(self.top, self.left, self.width, self.height)
+
         self.show()
 
     def changedValue(self, value):
