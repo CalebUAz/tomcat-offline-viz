@@ -21,10 +21,10 @@ class Window(QWidget):
         self.InitWindow()
 
     def InitWindow(self):
-        min, max, self.screenshots = read_screenshots()
-        print(min, max)
+        # min, max, self.screenshots = read_screenshots()
+        # print(min, max)
 
-        self.x, self.y, point_scale, id_labels = read_pupil_data()
+        # self.x, self.y, point_scale, id_labels = read_pupil_data()
 
         hbox = QHBoxLayout()
 
@@ -38,19 +38,19 @@ class Window(QWidget):
         self.tab_widget = QTabWidget()
         vbox.addWidget(self.tab_widget)
 
-        self.slider.setMinimum(min)
-        self.slider.setMaximum(max)
+        self.slider.setMinimum(0)
+        self.slider.setMaximum(50)
         self.slider.setGeometry(150, 80, 1000, 20)
         self.slider.sliderMoved[int].connect(self.changedValue)
         self.slider.setTickPosition(QSlider.TicksBelow)
 
         self.slider_text = QLabel(self)
-        self.tab_widget.addTab(self.slider_text, "Subject-1")
+        # self.tab_widget.addTab(self.slider_text, "Subject-1")
         self.slider_text.setGeometry(100, 860, 900, 20)
 
-        self.ScreenShot = QLabel(self)
-        # self.ScreenShot.setPixmap(QPixmap(self.screenshots[0]))
-        self.ScreenShot.setGeometry(60, 60, 1280, 720)
+        # self.ScreenShot = QLabel(self)
+        # # self.ScreenShot.setPixmap(QPixmap(self.screenshots[0]))
+        # self.ScreenShot.setGeometry(60, 60, 1280, 720)
 
         # Add the slider to the vertical layout
         vbox.addWidget(self.slider)
@@ -61,12 +61,15 @@ class Window(QWidget):
         self.setWindowTitle(self.title)
         self.setGeometry(self.top, self.left, self.width, self.height)
 
-        self.tab2 = QPushButton("Click me")
-        self.tab_widget.addTab(self.tab2, "Subject-2")
-
         self.setLayout(hbox)
         # self.setGeometry(self.top, self.left, self.width, self.height)
 
+        # self.tab2 = QPushButton("Click me")
+        self.addTabSubject("Subject-1")
+        self.addTabSubject("Subject-2")
+
+        # breakpoint()
+        
         self.show()
 
     def changedValue(self, value):
@@ -89,9 +92,20 @@ class Window(QWidget):
         val = self.slider.value()
         self.slider_text.setText(str(val))
         print('Time taken by changedValue:', time.process_time() - start)
-            
 
-if __name__ == '__main__':
-    App = QApplication(sys.argv)
-    window = Window()
-    sys.exit(App.exec_())
+    def addTabSubject(self, subject):
+        min, max, self.screenshots = read_screenshots()
+        print(min, max)
+
+        self.x, self.y, point_scale, id_labels = read_pupil_data()
+
+        self.tab_widget.addTab(self.slider_text, subject)
+        self.ScreenShot = QLabel(self)
+        # self.ScreenShot.setPixmap(QPixmap(self.screenshots[0]))
+        self.ScreenShot.setGeometry(60, 60, 1280, 720)
+        # breakpoint()
+
+# if __name__ == '__main__':
+#     App = QApplication(sys.argv)
+#     window = Window()
+#     sys.exit(App.exec_())
