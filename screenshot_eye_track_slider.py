@@ -26,17 +26,17 @@ class Window(QWidget):
         # Create a vertical layout for the button
         vbox = QVBoxLayout()
 
-        self.slider = QSlider(Qt.Horizontal, self)
-        self.slider.setTickInterval(1)
+        # self.slider = QSlider(Qt.Horizontal, self)
+        # self.slider.setTickInterval(1)
 
-        self.slider.setMinimum(0)
-        self.slider.setMaximum(50)
-        self.slider.setGeometry(200, 2000, 100, 20)
-        self.slider.sliderMoved[int].connect(self.changedValue)
-        self.slider.setTickPosition(QSlider.TicksBelow)
+        # self.slider.setMinimum(0)
+        # self.slider.setMaximum(50)
+        # self.slider.setGeometry(200, 2000, 100, 20)
+        # self.slider.sliderMoved[int].connect(self.changedValue)
+        # self.slider.setTickPosition(QSlider.TicksBelow)
 
-        self.slider_text = QLabel(self)
-        self.slider_text.setGeometry(200, 850, 150, 20)
+        # self.slider_text = QLabel(self)
+        # self.slider_text.setGeometry(200, 850, 150, 20)
 
         min, max, self.screenshots = read_screenshots()
         print(min, max)
@@ -48,7 +48,7 @@ class Window(QWidget):
         self.ScreenShot.setGeometry(100, 100, 1280, 720)
 
         # Add the slider to the vertical layout
-        vbox.addWidget(self.slider)
+        # vbox.addWidget(self.slider)
         # Add the vertical layout to the horizontal layout
         hbox.addLayout(vbox)
 
@@ -83,9 +83,9 @@ class Window(QWidget):
             rgb_image, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
         self.ScreenShot.setPixmap(QPixmap.fromImage(convert_to_Qt_format))
 
-        val = self.slider.value()
-        self.slider_text.setText(str(val))
-        print('Time taken by changedValue:', time.process_time() - start)
+        # val = self.slider.value()
+        # self.slider_text.setText(str(val))
+        # print('Time taken by changedValue:', time.process_time() - start)
 
 
 if __name__ == '__main__':
