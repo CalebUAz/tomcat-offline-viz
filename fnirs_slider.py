@@ -1,9 +1,11 @@
+import os
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel
 from PyQt5.QtCore import Qt
 import pyqtgraph as pg
 import sys
 import pandas as pd
+
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -30,10 +32,15 @@ class MainWindow(QtWidgets.QMainWindow):
             "S8-D6",
             "S8-D7",
         ]
-        data = pd.read_csv("/Users/calebjonesshibu/Desktop/tom/exp_2023_02_03_10/tiger/eeg_fnirs_pupil/eeg_fnirs_pupil/NIRS_filtered.csv",sep = '\t')
-        
-        self.data1 = data.iloc[:,1:21]
-        self.data2 = data.iloc[:,21:41]
+
+        cwd = os.getcwd()
+        data_path = os.path.join(cwd, "data/NIRS/fNIRS.csv")
+
+        data = pd.read_csv(
+            data_path, sep='\t')
+
+        self.data1 = data.iloc[:, 1:21]
+        self.data2 = data.iloc[:, 21:41]
 
         # initialize plots
         super(MainWindow, self).__init__()
@@ -64,7 +71,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.centralWidget.setLayout(self.mainLayout)
         self.setCentralWidget(self.centralWidget)
 
-         # Enable antialiasing for prettier plots
+        # Enable antialiasing for prettier plots
 
         pg.setConfigOptions(antialias=True)
 
@@ -101,7 +108,8 @@ class MainWindow(QtWidgets.QMainWindow):
             if self.idx < n_channels - 1:
                 self.channel.hideAxis("bottom")
 
-            self.channel.setLabel("left", self.channel_list[self.idx], **label_style)
+            self.channel.setLabel(
+                "left", self.channel_list[self.idx], **label_style)
 
             self.ch.append(self.channel)
             self.ch1.append(self.channel)
@@ -113,7 +121,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         for self.idx, (self.ch, self.ch1) in enumerate(zip(self.ch, self.ch1)):
             self.ch = self.ch.plot(x=self.x, y=self.y[self.idx], pen=self.pen)
-            self.ch1 = self.ch1.plot(x=self.x, y=self.y1[self.idx], pen=self.pen1)
+            self.ch1 = self.ch1.plot(
+                x=self.x, y=self.y1[self.idx], pen=self.pen1)
 
             self.dataLine[self.idx].append(self.ch)
             self.dataLine1[self.idx].append(self.ch1)
@@ -123,12 +132,13 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def update_slider_value(self, value):
         self.slider_value = value
-        
+
     def update_plot_data(self, value):
         self.slider_value = value
 
         window_size = 1000
-        start = max(0, int(len(self.data1) * (self.slider_value / 1000) - window_size // 2))
+        start = max(0, int(len(self.data1) *
+                    (self.slider_value / 1000) - window_size // 2))
         end = min(len(self.data1), start + window_size)
 
         self.x = list(range(start, end))
@@ -180,6 +190,7 @@ class MainWindow(QtWidgets.QMainWindow):
     #         for i in range(0, len(self.channel_list)):
     #             self.dataLine[i][0].setData(self.x, self.y[i])
     #             self.dataLine1[i][0].setData(self.x, self.y1[i])
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)

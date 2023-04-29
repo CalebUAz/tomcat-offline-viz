@@ -5,6 +5,7 @@ import cv2
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage
 from matplotlib.widgets import SliderBase
+from fnirs_slider import MainWindow
 
 from screenshot_eye_track_slider import Window
 
@@ -60,10 +61,11 @@ class MyWidget(QWidget):
         sub_layout2.addLayout(slider, 2)
 
         window = Window()
+        signal = MainWindow()
 
         # Add the labels to the respective layouts
         eye_tracking.addWidget(window)
-        fNIRS_EEG.addWidget(label2)
+        fNIRS_EEG.addWidget(signal)
         fNIRS_EEG.addWidget(label3)
         slider.addWidget(label4)
         
@@ -83,30 +85,6 @@ class MyWidget(QWidget):
 
     # def on_button_clicked(self):
     #     self.label.setText('Button clicked')  # Update the label's text when the button is clicked
-
-
-    # def changedValue(self, value):
-    #     # change value of the slider when you move the slider and switch to the next img
-    #     start = time.process_time()
-
-    #     rgb_image = cv2.cvtColor(self.screenshots[value], cv2.COLOR_BGR2RGB)
-    #     # print(self.x[value], self.y[value])
-    #     x_value = self.x.get(value, None)
-    #     y_value = self.y.get(value, None)
-
-    #     if x_value is not None and y_value is not None:
-    #         cv2.circle(rgb_image, (int(x_value), int(y_value)),
-    #                    5, (255, 0, 0), 2)
-
-    #     h, w, ch = rgb_image.shape
-    #     bytes_per_line = ch * w
-    #     convert_to_Qt_format = QtGui.QImage(
-    #         rgb_image, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
-    #     self.ScreenShot.setPixmap(QPixmap.fromImage(convert_to_Qt_format))
-
-    #     val = self.slider.value()
-    #     self.slider_text.setText(str(val))
-    #     print('Time taken by changedValue:', time.process_time() - start)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
