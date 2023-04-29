@@ -26,14 +26,16 @@ class MyWidget(QWidget):
         slider.setTickInterval(1)
 
         window = Window()
+        # signal = MainWindow()
         signal = TopoMainWindow()
 
         slider.setMinimum(0)
         slider.setMaximum(50)
         slider.setGeometry(200, 2000, 100, 20)
-        slider.setRange(0, 999)
+        slider.setRange(0, 49)
         slider.valueChanged.connect(window.load_image)
         # slider.sliderMoved[int].connect(window.changedValue)
+        # slider.valueChanged.connect(signal.update_plot_data)
         slider.valueChanged.connect(signal.slider_moved)
         slider.setTickPosition(QSlider.TicksBelow)
 

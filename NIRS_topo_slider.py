@@ -8,6 +8,7 @@ import pyxdf
 import numpy as np
 import matplotlib.pyplot as plt
 import mne
+import os
 
 class TopoMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -15,7 +16,9 @@ class TopoMainWindow(QtWidgets.QMainWindow):
         self.slider_value = 0
 
         # Replace 'your_xdf_file.xdf' with your XDF file path
-        data_xdf, header = pyxdf.load_xdf('/Users/calebjonesshibu/Desktop/tom/data/exp_2023_02_03_10/lion/eeg_fnirs_pupil/lion_eeg_fnirs_pupil.xdf')
+        cwd = os.getcwd()
+        data_path = os.path.join(cwd, "data/lion_eeg_fnirs_pupil.xdf")
+        data_xdf, header = pyxdf.load_xdf(data_path)
 
         self.fnirs_data = None
         for stream in data_xdf:
