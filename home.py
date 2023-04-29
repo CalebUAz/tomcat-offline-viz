@@ -1,6 +1,6 @@
 import sys
 import time
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QTabWidget, QSpacerItem, QSizePolicy, QSlider
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QTabWidget, QSpacerItem, QSizePolicy, QSlider, QStackedWidget
 import cv2
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage
@@ -16,7 +16,8 @@ class MyWidget(QWidget):
         self.initUI()
 
     def initUI(self):
-        self.setGeometry(200, 200, 400, 300)  # Set the position and size of the widget
+        # Set the position and size of the widget
+        self.setGeometry(200, 200, 400, 300)
 
         label1 = QLabel("eye-tracking")
         label2 = QLabel("fNIRS")
@@ -73,28 +74,74 @@ class MyWidget(QWidget):
         # Set the stretch factor for box 1 in the second row layout to make it 2/3 of the row's width
         sub_layout2.addLayout(slider_box)
 
+        # Define the function for Button 1 to switch between View 1 and View 2
+        def switchButton1View():
+            print(stacked_widget.currentIndex())
+            current_index = stacked_widget.currentIndex()
+            if current_index == 0:
+                stacked_widget.setCurrentIndex(1)
+            else:
+                stacked_widget.setCurrentIndex(0)
+
+        # Define the function for Button 2 to switch between View 1 and View 2
+        def switchButton2View():
+            print("Button2: ", stacked_widget.currentIndex())
+            current_index = stacked_widget.currentIndex()
+            if current_index == 2:
+                stacked_widget.setCurrentIndex(3)
+            else:
+                stacked_widget.setCurrentIndex(2)
+
+        # Create the stacked widget for the views in Box 2
+        stacked_widget = QStackedWidget()
+
+        # Create the first view (View 1) and add it to the stacked widget
+        stacked_widget.addWidget(signal)
+
+        # Create the first view (View 1) and add it to the stacked widget
+        view1 = QLabel("View 1 fNIRS")
+        view1.setStyleSheet("border: 1px solid black;")
+        stacked_widget.addWidget(view1)
+
+        # Create the second view (View 2) and add it to the stacked widget
+        view2 = QLabel("View 2 EEG")
+        view2.setStyleSheet("border: 1px solid black;")
+        stacked_widget.addWidget(view2)
+
+        # Create the stacked widget for the views in Box 2
+        # stacked_widgetView = QStackedWidget()
+
+        # Create the first view (View 1) and add it to the stacked widget
+        stacked_widget.addWidget(signal)
+
+        # Create the second view (View 2) and add it to the stacked widget
+        view2 = QLabel("View 2 Topological")
+        view2.setStyleSheet("border: 1px solid black;")
+        stacked_widget.addWidget(view2)
+
+        # Create a button
+        button = QPushButton('fNIRS or EEG', self)
+
+        # Connect the button's clicked signal to a function
+        button.clicked.connect(switchButton1View)
+
+        # Create a button
+        buttonView = QPushButton('Signal or Topological View', self)
+
+        # Connect the button's clicked signal to a function
+        buttonView.clicked.connect(switchButton2View)
+
         # Add the labels to the respective layouts
         eye_tracking.addWidget(window)
-        fNIRS_EEG.addWidget(signal)
-        fNIRS_EEG.addWidget(label3)
+        fNIRS_EEG.addWidget(button)
+        fNIRS_EEG.addWidget(stacked_widget)
+        fNIRS_EEG.addWidget(buttonView)
         slider_box.addWidget(slider)
-        
-        # button = QPushButton('Click me', self)  
-        # Create a button
-
-        # vbox.addWidget(button)
-        # button.clicked.connect(on_button_clicked)  # Connect the button's clicked signal to a function
-
-        # label = QLabel(self)  # Create a label
-        # label.setText('Button not clicked yet')  # Set the initial text for the label
-        # label.move(10, 50)  # Move the label to a specific position
 
         self.setLayout(main_layout)
 
         self.show()  # Show the widget
 
-    # def on_button_clicked(self):
-    #     self.label.setText('Button clicked')  # Update the label's text when the button is clicked
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

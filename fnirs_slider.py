@@ -32,7 +32,7 @@ class MainWindow(QtWidgets.QMainWindow):
             "S8-D7",
         ]
         cwd = os.getcwd()
-        data_path = os.path.join(cwd, "data/NIRS/fNIRS.csv")
+        data_path = os.path.join(cwd, "data/NIRS/NIRS_filtered.csv")
 
         data = pd.read_csv(
             data_path, sep='\t')
