@@ -5,6 +5,7 @@ import cv2
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage
 from matplotlib.widgets import SliderBase
+from fnirs_slider import MainWindow
 
 from screenshot_eye_track_slider import Window
 
@@ -71,10 +72,12 @@ class MyWidget(QWidget):
         # Set the stretch factor for box 1 in the second row layout to make it 2/3 of the row's width
         sub_layout2.addLayout(slider_box)
 
+        window = Window()
+        signal = MainWindow()
 
         # Add the labels to the respective layouts
         eye_tracking.addWidget(window)
-        fNIRS_EEG.addWidget(label2)
+        fNIRS_EEG.addWidget(signal)
         fNIRS_EEG.addWidget(label3)
         slider_box.addWidget(slider)
         
@@ -93,7 +96,7 @@ class MyWidget(QWidget):
         self.show()  # Show the widget
 
     # def on_button_clicked(self):
-    #     label.setText('Button clicked')  # Update the label's text when the button is clicked
+    #     self.label.setText('Button clicked')  # Update the label's text when the button is clicked
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
