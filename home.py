@@ -25,6 +25,7 @@ class MyWidget(QWidget):
         slider.setTickInterval(1)
 
         window = Window()
+        signal = MainWindow()
 
         slider.setMinimum(0)
         slider.setMaximum(50)
@@ -71,9 +72,6 @@ class MyWidget(QWidget):
 
         # Set the stretch factor for box 1 in the second row layout to make it 2/3 of the row's width
         sub_layout2.addLayout(slider_box)
-
-        window = Window()
-        signal = MainWindow()
 
         # Add the labels to the respective layouts
         eye_tracking.addWidget(window)
