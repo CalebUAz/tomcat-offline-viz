@@ -30,7 +30,10 @@ class MyWidget(QWidget):
         slider.setMinimum(0)
         slider.setMaximum(50)
         slider.setGeometry(200, 2000, 100, 20)
-        slider.sliderMoved[int].connect(window.changedValue)
+        slider.setRange(0, 999)
+        slider.valueChanged.connect(window.load_image)
+        # slider.sliderMoved[int].connect(window.changedValue)
+        slider.valueChanged.connect(signal.update_plot_data)
         slider.setTickPosition(QSlider.TicksBelow)
 
         slider_text = QLabel(self)

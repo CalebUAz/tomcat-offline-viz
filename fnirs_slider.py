@@ -32,7 +32,7 @@ class MainWindow(QtWidgets.QMainWindow):
             "S8-D7",
         ]
         cwd = os.getcwd()
-        data_path = os.path.join(cwd, "data/NIRS/fNIRS.csv")
+        data_path = os.path.join(cwd, "data/NIRS/NIRS_filtered.csv")
 
         data = pd.read_csv(
             data_path, sep='\t')
@@ -131,8 +131,9 @@ class MainWindow(QtWidgets.QMainWindow):
         
     def update_plot_data(self, value):
         self.slider_value = value
+        print(self.slider_value)
 
-        window_size = 1000
+        window_size = 50
         start = max(0, int(len(self.data1) * (self.slider_value / 1000) - window_size // 2))
         end = min(len(self.data1), start + window_size)
 
