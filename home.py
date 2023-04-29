@@ -59,7 +59,7 @@ class MyWidget(QWidget):
         main_layout.addLayout(sub_layout1)
 
         # Set the stretch factor for box 2 and box 3 to divide the remaining vertical space equally
-        sub_layout1.addLayout(eye_tracking)
+        sub_layout1.addLayout(eye_tracking, 2)
         sub_layout1.addLayout(fNIRS_EEG)
 
         # Create the second row layout
