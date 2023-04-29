@@ -1,3 +1,4 @@
+import os
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel
 from PyQt5.QtCore import Qt
@@ -30,7 +31,11 @@ class MainWindow(QtWidgets.QMainWindow):
             "S8-D6",
             "S8-D7",
         ]
-        data = pd.read_csv("/Users/calebjonesshibu/Desktop/tom/exp_2023_02_03_10/tiger/eeg_fnirs_pupil/eeg_fnirs_pupil/NIRS_filtered.csv",sep = '\t')
+        cwd = os.getcwd()
+        data_path = os.path.join(cwd, "data/NIRS/fNIRS.csv")
+
+        data = pd.read_csv(
+            data_path, sep='\t')
         
         self.data1 = data.iloc[:,1:21]
         self.data2 = data.iloc[:,21:41]
