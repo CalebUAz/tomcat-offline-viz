@@ -6,6 +6,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage
 from matplotlib.widgets import SliderBase
 from fnirs_slider import MainWindow
+from NIRS_topo_slider import TopoMainWindow
 
 from screenshot_eye_track_slider import Window
 
@@ -25,7 +26,7 @@ class MyWidget(QWidget):
         slider.setTickInterval(1)
 
         window = Window()
-        signal = MainWindow()
+        signal = TopoMainWindow()
 
         slider.setMinimum(0)
         slider.setMaximum(50)
@@ -33,7 +34,7 @@ class MyWidget(QWidget):
         slider.setRange(0, 999)
         slider.valueChanged.connect(window.load_image)
         # slider.sliderMoved[int].connect(window.changedValue)
-        slider.valueChanged.connect(signal.update_plot_data)
+        slider.valueChanged.connect(signal.slider_moved)
         slider.setTickPosition(QSlider.TicksBelow)
 
         slider_text = QLabel(self)
