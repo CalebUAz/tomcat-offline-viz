@@ -112,7 +112,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.graphWidgetLayout.setBackground("w")
 
-        self.pen = pg.mkPen(color=(255,255,255), width=2)  # black
+        self.pen = pg.mkPen(color=(0,0,0), width=2)  # black
 
         self.ch = []
         # self.ch1 = []

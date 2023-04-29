@@ -3,3 +3,7 @@ __pycache__/
 .DS_Store
 # EEG_slider.py
 test.py
+*.ipynb
+*.npy
+*.fif
+test/
