@@ -8,6 +8,7 @@ from matplotlib.widgets import SliderBase
 from fnirs_slider import MainWindow
 
 from screenshot_eye_track_slider import Window
+from screenshot_eye_track_slider import Window as WindowEEG
 
 
 class MyWidget(QWidget):
@@ -19,14 +20,13 @@ class MyWidget(QWidget):
         # Set the position and size of the widget
         self.setGeometry(200, 200, 400, 300)
 
-        label1 = QLabel("eye-tracking")
-        label2 = QLabel("fNIRS")
-        label3 = QLabel("Button to switch")
+        view_Label = QLabel("")
         slider = QSlider(Qt.Horizontal, self)
         slider.setTickInterval(1)
 
         window = Window()
-        signal = MainWindow()
+        signal_fNIRS = MainWindow()
+        signal_EEG = WindowEEG()
 
         slider.setMinimum(0)
         slider.setMaximum(50)
@@ -38,15 +38,14 @@ class MyWidget(QWidget):
         slider_text.setGeometry(200, 850, 150, 20)
 
         # Add a border style to each label
-        label1.setStyleSheet("border: 1px solid black;")
-        label2.setStyleSheet("border: 1px solid black;")
-        label3.setStyleSheet("border: 1px solid black;")
+        view_Label.setStyleSheet("border: 1px solid black;")
         slider.setStyleSheet("border: 1px solid black;")
 
         # Set custom dimensions for each label
-        label1.setFixedSize(1500, 1000)
-        label2.setFixedSize(300, 700)
-        label3.setFixedSize(200, 90)
+        # label1.setFixedSize(1500, 1000)
+        # label2.setFixedSize(300, 700)
+        # label3.setFixedSize(200, 90)
+        view_Label.setFixedSize(300, 90)
         slider.setFixedSize(1400, 50)
 
         # Create the layout managers
@@ -56,6 +55,7 @@ class MyWidget(QWidget):
         sub_layout1 = QHBoxLayout()
         eye_tracking = QVBoxLayout()
         fNIRS_EEG = QVBoxLayout()
+        buttons = QVBoxLayout()
 
         # Set the stretch factor for the main layout to make box 1 take 2/3 of the vertical space
         main_layout.addLayout(sub_layout1)
@@ -75,58 +75,91 @@ class MyWidget(QWidget):
         sub_layout2.addLayout(slider_box)
 
         # Define the function for Button 1 to switch between View 1 and View 2
-        def switchButton1View():
-            print(stacked_widget.currentIndex())
-            current_index = stacked_widget.currentIndex()
-            if current_index == 0:
-                stacked_widget.setCurrentIndex(1)
-            else:
-                stacked_widget.setCurrentIndex(0)
+        # def switchButton1View():
+        #     current_index = stacked_widget.currentIndex()
+            
+        #     if current_index == 0:
+        #         view_Label.setText("Button 1 Text")
+        #         stacked_widget.setCurrentIndex(1)
+        #     else:
+        #         view_Label.setText("Button 1 Text")
+        #         stacked_widget.setCurrentIndex(0)
 
-        # Define the function for Button 2 to switch between View 1 and View 2
-        def switchButton2View():
-            print("Button2: ", stacked_widget.currentIndex())
-            current_index = stacked_widget.currentIndex()
-            if current_index == 2:
-                stacked_widget.setCurrentIndex(3)
-            else:
-                stacked_widget.setCurrentIndex(2)
+        # # Define the function for Button 2 to switch between View 1 and View 2
+        # def switchButton2View():
+        #     current_index = stacked_widget.currentIndex()
+        #     if current_index == 2:
+        #         view_Label.setText("Button 1 Text")
+        #         stacked_widget.setCurrentIndex(3)
+        #     else:
+        #         view_Label.setText("Button 1 Text")
+        #         stacked_widget.setCurrentIndex(2)
 
         # Create the stacked widget for the views in Box 2
         stacked_widget = QStackedWidget()
 
         # Create the first view (View 1) and add it to the stacked widget
-        stacked_widget.addWidget(signal)
+        stacked_widget.addWidget(signal_fNIRS)
 
         # Create the first view (View 1) and add it to the stacked widget
-        view1 = QLabel("View 1 fNIRS")
-        view1.setStyleSheet("border: 1px solid black;")
-        stacked_widget.addWidget(view1)
+        stacked_widget.addWidget(signal_EEG)
 
         # Create the second view (View 2) and add it to the stacked widget
-        view2 = QLabel("View 2 EEG")
+        view2 = QLabel("View 2 fNIRS Topological ")
         view2.setStyleSheet("border: 1px solid black;")
         stacked_widget.addWidget(view2)
 
-        # Create the stacked widget for the views in Box 2
-        # stacked_widgetView = QStackedWidget()
-
-        # Create the first view (View 1) and add it to the stacked widget
-        stacked_widget.addWidget(signal)
-
         # Create the second view (View 2) and add it to the stacked widget
-        view2 = QLabel("View 2 Topological")
+        view2 = QLabel("View 2 EEG Topological")
         view2.setStyleSheet("border: 1px solid black;")
         stacked_widget.addWidget(view2)
+
+        def switchButton1View():
+            button1_property = button.property("value")
+            button2_property = buttonView.property("value")
+            print("Button1: ", button1_property, button2_property)
+            if button1_property == "fNIRS":
+                button.setProperty("value", "EEG")
+                if button2_property == "signal":
+                    stacked_widget.setCurrentIndex(1)
+                elif button2_property == "topological":
+                    stacked_widget.setCurrentIndex(3)
+            elif button1_property == "EEG":
+                button.setProperty("value", "fNIRS")
+                if button2_property == "signal":
+                    stacked_widget.setCurrentIndex(0)
+                elif button2_property == "topological":
+                    stacked_widget.setCurrentIndex(2)
+
+        def switchButton2View():
+            button1_property = button.property("value")
+            button2_property = buttonView.property("value")
+            print("Button2: ", button1_property, button2_property)
+            if button2_property == "signal":
+                buttonView.setProperty("value", "topological")
+                if button1_property == "fNIRS":
+                    stacked_widget.setCurrentIndex(2)
+                elif button1_property == "EEG":
+                    stacked_widget.setCurrentIndex(3)
+            elif button2_property == "topological":
+                buttonView.setProperty("value", "signal")
+                if button1_property == "fNIRS":
+                    stacked_widget.setCurrentIndex(0)
+                elif button1_property == "EEG":
+                    stacked_widget.setCurrentIndex(1)
 
         # Create a button
         button = QPushButton('fNIRS or EEG', self)
+        # Set the property of button1 to indicate its value
+        button.setProperty("value", "fNIRS")
 
         # Connect the button's clicked signal to a function
         button.clicked.connect(switchButton1View)
 
         # Create a button
         buttonView = QPushButton('Signal or Topological View', self)
+        # Set the property of button2 to indicate its value
+        buttonView.setProperty("value", "signal")
 
         # Connect the button's clicked signal to a function
         buttonView.clicked.connect(switchButton2View)
@@ -136,6 +169,10 @@ class MyWidget(QWidget):
         fNIRS_EEG.addWidget(button)
         fNIRS_EEG.addWidget(stacked_widget)
         fNIRS_EEG.addWidget(buttonView)
+
+        # buttons.addWidget(button)
+        # buttons.addWidget(buttonView)
+
         slider_box.addWidget(slider)
 
         self.setLayout(main_layout)
