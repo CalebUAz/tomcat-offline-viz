@@ -34,8 +34,8 @@ class Window(QWidget):
         self.title = "ToMCAT offline viz"
         self.top = 10
         self.left = 10
-        self.width = 1100
-        self.height = 800
+        # self.width = 1100
+        # self.height = 800
         self.InitWindow()
 
     def InitWindow(self):
@@ -76,12 +76,16 @@ class Window(QWidget):
         # self.ScreenShot.setGeometry(100, 100, 640, 720)
 
         self.label_name = QLabel(self)
-        self.label_name.setGeometry(50, 50, 640, 50)
+        # self.label_name.setGeometry(50, 50, 640, 10)
+        screen_resolution = QApplication.desktop().screenGeometry()
+        width_label = int(screen_resolution.width() * 0.5)
+        height_label = int(screen_resolution.height() * 0.9)
+        self.label_name.setFixedSize(width_label, 50)
         self.label_name.setStyleSheet("background-color: rgba(255, 255, 255, 100); padding: 2px;")
         vbox.addWidget(self.label_name)
 
         self.ScreenShot = QLabel(self)
-        self.ScreenShot.setGeometry(100, 100, 640, 360)
+        self.ScreenShot.setGeometry(100, 100, width_label, width_label)
 
         # Add the screenshot to the vertical layout
         vbox.addWidget(self.ScreenShot)
@@ -92,10 +96,12 @@ class Window(QWidget):
 
         self.setWindowIcon(QtGui.QIcon("icon.png"))
         self.setWindowTitle(self.title)
-        self.setGeometry(self.top, self.left, self.width, self.height)
+        self.setGeometry(self.top, self.left, width_label, height_label)
+        self.setFixedSize(width_label, height_label)
 
         self.setLayout(vbox)
-        self.setGeometry(self.left, self.top, self.width, self.height)
+        self.setGeometry(self.left, self.top, width_label, height_label)
+        self.setFixedSize(width_label, height_label)
 
         # self.ScreenShot = QLabel(self)
         # self.ScreenShot.setGeometry(100, 100, 1280, 720)

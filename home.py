@@ -1,6 +1,6 @@
 import sys
 import time
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QTabWidget, QSpacerItem, QSizePolicy, QSlider, QStackedWidget
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QTabWidget, QSpacerItem, QSizePolicy, QSlider, QStackedWidget, QFrame
 import cv2
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage
@@ -20,17 +20,49 @@ class MyWidget(QWidget):
         self.initUI()
 
     def initUI(self):
+
+        # window = QWidget()
+        # window.show()
+        # Get the dimensions of the window
+        # width = window.width()
+        # height = window.height()
+        # print("Output: ", width, height)
+
         # Get the screen resolution
         screen_resolution = QApplication.desktop().screenGeometry()
+        # print("screen:", screen_resolution.width(), screen_resolution.height())
 
         # Calculate the desired position and size based on screen resolution
         x = int(screen_resolution.width() * 0.1)
         y = int(screen_resolution.height() * 0.1)
-        width = int(screen_resolution.width() * 0.8)
-        height = int(screen_resolution.height() * 0.8)
+        width = int(screen_resolution.width() * 0.9)
+        height = int(screen_resolution.height() * 0.9)
+
+        # # Create a parent widget
+        # widget = QWidget()
+
+        # Create the layout managers
+        main_layout = QVBoxLayout()
+
+        # create the first row layout which includes eye-tracking and signal view
+        sub_layout1 = QHBoxLayout()
+        eye_tracking = QVBoxLayout()
+        fNIRS = QVBoxLayout()
+        EEG = QVBoxLayout()
+        buttons = QVBoxLayout()
+
+        # Create a QFrame and set the layout as its layout
+        frame = QFrame()
+        frame_sub_layout1 = QFrame()
+        frame_eye_tracking = QFrame()
+        frame_fNIRS = QFrame()
+
+        frame_eye_tracking.setFixedSize(300, 900)
+        frame_fNIRS.setFixedSize(400, 900)
 
         # Set the position and size of the widget
         self.setGeometry(x, y, width, height)
+        # self.setFixedSize(width_box1, height_box1)
         
         # Set the position and size of the widget
         # self.setGeometry(200, 200, 400, 300)
@@ -70,21 +102,13 @@ class MyWidget(QWidget):
         view_Label.setFixedSize(300, 90)
         slider.setFixedSize(1400, 50)
 
-        # Create the layout managers
-        main_layout = QVBoxLayout()
-
-        # create the first row layout which includes eye-tracking and signal view
-        sub_layout1 = QHBoxLayout()
-        eye_tracking = QVBoxLayout()
-        fNIRS_EEG = QVBoxLayout()
-        buttons = QVBoxLayout()
-
         # Set the stretch factor for the main layout to make box 1 take 2/3 of the vertical space
         main_layout.addLayout(sub_layout1)
 
         # Set the stretch factor for box 2 and box 3 to divide the remaining vertical space equally
-        sub_layout1.addLayout(eye_tracking, 2)
-        sub_layout1.addLayout(fNIRS_EEG)
+        sub_layout1.addLayout(eye_tracking)
+        sub_layout1.addLayout(fNIRS)
+        sub_layout1.addLayout(EEG)
 
         # Create the second row layout
         sub_layout2 = QHBoxLayout()
@@ -95,6 +119,7 @@ class MyWidget(QWidget):
 
         # Set the stretch factor for box 1 in the second row layout to make it 2/3 of the row's width
         sub_layout2.addLayout(slider_box)
+
 
         # Create the stacked widget for the views in Box 2
         stacked_widget = QStackedWidget()
@@ -109,8 +134,6 @@ class MyWidget(QWidget):
         stacked_widget.addWidget(topo_fNIRS)
 
         # Create the second view (View 2) and add it to the stacked widget
-        # view2 = QLabel("View 2 EEG Topological")
-        # view2.setStyleSheet("border: 1px solid black;")
         stacked_widget.addWidget(topo_EEG)
 
         def switchButton1View():
@@ -163,9 +186,11 @@ class MyWidget(QWidget):
 
         # Add the labels to the respective layouts
         eye_tracking.addWidget(window)
-        fNIRS_EEG.addWidget(button)
-        fNIRS_EEG.addWidget(stacked_widget)
-        fNIRS_EEG.addWidget(buttonView)
+        fNIRS.addWidget(stacked_widget)
+        fNIRS.addWidget(button)
+
+        EEG.addWidget(stacked_widget)
+        EEG.addWidget(buttonView)
 
         # buttons.addWidget(button)
         # buttons.addWidget(buttonView)
