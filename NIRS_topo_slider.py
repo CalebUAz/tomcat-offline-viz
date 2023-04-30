@@ -8,6 +8,7 @@ import pyxdf
 import numpy as np
 import matplotlib.pyplot as plt
 import mne
+import os
 
 class TopoMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -15,7 +16,9 @@ class TopoMainWindow(QtWidgets.QMainWindow):
         self.slider_value = 0
 
         # Replace 'your_xdf_file.xdf' with your XDF file path
-        data_xdf, header = pyxdf.load_xdf('/Users/calebjonesshibu/Desktop/tom/data/exp_2023_02_03_10/lion/eeg_fnirs_pupil/lion_eeg_fnirs_pupil.xdf')
+        cwd = os.getcwd()
+        data_path = os.path.join(cwd, "data/XDF/tiger_eeg_fnirs_pupil.xdf")
+        data_xdf, header = pyxdf.load_xdf(data_path)
 
         self.fnirs_data = None
         for stream in data_xdf:
@@ -145,18 +148,18 @@ class TopoMainWindow(QtWidgets.QMainWindow):
         self.graphWidgetLayout = QVBoxLayout()
 
         # Create and configure the slider layout
-        self.sliderLayout = QHBoxLayout()
-        self.slider = QSlider(Qt.Horizontal, self)
-        self.slider.setTickInterval(1)
-        self.slider.setMinimum(0)
-        self.slider.setMaximum(1000)
-        self.slider.valueChanged.connect(self.slider_moved)
-        self.slider.setTickPosition(QSlider.TicksBelow)
-        self.sliderLayout.addWidget(self.slider)
+        # self.sliderLayout = QHBoxLayout()
+        # self.slider = QSlider(Qt.Horizontal, self)
+        # self.slider.setTickInterval(1)
+        # self.slider.setMinimum(0)
+        # self.slider.setMaximum(1000)
+        # self.slider.valueChanged.connect(self.slider_moved)
+        # self.slider.setTickPosition(QSlider.TicksBelow)
+        # self.sliderLayout.addWidget(self.slider)
 
         # Add the plots and slider layouts to the main layout
         self.mainLayout.addLayout(self.graphWidgetLayout)
-        self.mainLayout.addWidget(self.slider)  # Change this line
+        # self.mainLayout.addWidget(self.slider)  # Change this line
 
         # Set the main layout as the central widget
         self.centralWidget = QWidget()
@@ -217,7 +220,6 @@ class TopoMainWindow(QtWidgets.QMainWindow):
         self.canvas.draw()
 
     def update_topomap(self, value):
-        print(value)
         self.slider_value = value
 
         # Call plot_topomap to update the plot

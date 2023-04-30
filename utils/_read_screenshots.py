@@ -73,7 +73,10 @@ import numpy as np
 def read_screenshots():
     start = time.process_time()
     images = []
-    for cnt, im_path in enumerate(sorted(glob.glob('/Users/calebjonesshibu/Desktop/tom/exp_2023_02_03_10/tiger/screenshots/screenshots/*.*'))):
+    image_paths = []
+    cwd = os.getcwd()
+    data_path = os.path.join(cwd, "data/Screenshots/Screenshots/*.*")
+    for cnt, im_path in enumerate(sorted(glob.glob(data_path))):
         if cnt == 5000:
             break
         
@@ -84,8 +87,11 @@ def read_screenshots():
         # Read the image using PIL.Image and convert it to an OpenCV compatible format
         img = Image.open(io.BytesIO(img_data))
         img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+
+        label_name = os.path.basename(im_path)
+        image_paths.append(label_name)
         
         images.append(img)
     
     print(time.process_time() - start)
-    return 0, cnt, images
+    return 0, 50, images, image_paths

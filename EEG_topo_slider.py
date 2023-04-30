@@ -8,13 +8,15 @@ import pyxdf
 import numpy as np
 import matplotlib.pyplot as plt
 import mne
-
+import os
 class TopoMainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(TopoMainWindow, self).__init__()
         self.slider_value = 0
 
-        data_xdf, header = pyxdf.load_xdf('/Users/calebjonesshibu/Desktop/tom/data/exp_2023_02_03_10/lion/eeg_fnirs_pupil/lion_eeg_fnirs_pupil.xdf')
+        cwd = os.getcwd()
+        data_path = os.path.join(cwd, "data/XDF/tiger_eeg_fnirs_pupil.xdf")
+        data_xdf, header = pyxdf.load_xdf(data_path)
 
         # Load the EEG data into a NumPy array
         EEG_data = None
@@ -96,18 +98,18 @@ class TopoMainWindow(QtWidgets.QMainWindow):
         self.graphWidgetLayout = QVBoxLayout()
 
         # Create and configure the slider layout
-        self.sliderLayout = QHBoxLayout()
-        self.slider = QSlider(Qt.Horizontal, self)
-        self.slider.setTickInterval(1)
-        self.slider.setMinimum(0)
-        self.slider.setMaximum(1000)
-        self.slider.valueChanged.connect(self.slider_moved)
-        self.slider.setTickPosition(QSlider.TicksBelow)
-        self.sliderLayout.addWidget(self.slider)
+        # self.sliderLayout = QHBoxLayout()
+        # self.slider = QSlider(Qt.Horizontal, self)
+        # self.slider.setTickInterval(1)
+        # self.slider.setMinimum(0)
+        # self.slider.setMaximum(1000)
+        # self.slider.valueChanged.connect(self.slider_moved)
+        # self.slider.setTickPosition(QSlider.TicksBelow)
+        # self.sliderLayout.addWidget(self.slider)
 
         # Add the plots and slider layouts to the main layout
         self.mainLayout.addLayout(self.graphWidgetLayout)
-        self.mainLayout.addWidget(self.slider)  # Change this line
+        # self.mainLayout.addWidget(self.slider)  # Change this line
 
         # Set the main layout as the central widget
         self.centralWidget = QWidget()
@@ -125,7 +127,7 @@ class TopoMainWindow(QtWidgets.QMainWindow):
             filtered_band_data = filtered_raw.copy().filter(l_freq=l_freq, h_freq=h_freq, skip_by_annotation='edge', picks=['eeg'])
             self.filtered_band_data_dict[band_name] = filtered_band_data.get_data(picks=['eeg', 'misc'])
 
-        self.plot_topomap(0, 2500, self.frequency_bands, self.filtered_band_data_dict, self.info, self.channels_used)
+        self.plot_topomap(0, 100, self.frequency_bands, self.filtered_band_data_dict, self.info, self.channels_used)
 
     def plot_topomap(self, start_sample, num_samples, frequency_bands, filtered_band_data_dict, info, channels_used):
         self.canvas.figure.clear()
@@ -155,7 +157,6 @@ class TopoMainWindow(QtWidgets.QMainWindow):
         self.canvas.draw()
 
     def update_topomap(self, value):
-        print(value)
         self.slider_value = value
 
         # Call plot_topomap to update the plot

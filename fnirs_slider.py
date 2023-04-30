@@ -1,3 +1,4 @@
+import os
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QSlider, QLabel
 from PyQt5.QtCore import Qt
@@ -30,7 +31,11 @@ class MainWindow(QtWidgets.QMainWindow):
             "S8-D6",
             "S8-D7",
         ]
-        data = pd.read_csv("/Users/calebjonesshibu/Desktop/tom/exp_2023_02_03_10/tiger/eeg_fnirs_pupil/eeg_fnirs_pupil/NIRS_filtered.csv",sep = '\t')
+        cwd = os.getcwd()
+        data_path = os.path.join(cwd, "data/NIRS/NIRS_filtered.csv")
+
+        data = pd.read_csv(
+            data_path, sep='\t')
         
         self.data1 = data.iloc[:,1:21]
         self.data2 = data.iloc[:,21:41]
@@ -46,18 +51,18 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphWidgetLayout.resize(1000, 2500)
 
         # Create and configure the slider layout
-        self.sliderLayout = QHBoxLayout()
-        self.slider = QSlider(Qt.Horizontal, self)
-        self.slider.setTickInterval(1)
-        self.slider.setMinimum(0)
-        self.slider.setMaximum(1000)
-        self.slider.valueChanged.connect(self.update_plot_data)
-        self.slider.setTickPosition(QSlider.TicksBelow)
-        self.sliderLayout.addWidget(self.slider)
+        # self.sliderLayout = QHBoxLayout()
+        # self.slider = QSlider(Qt.Horizontal, self)
+        # self.slider.setTickInterval(1)
+        # self.slider.setMinimum(0)
+        # self.slider.setMaximum(1000)
+        # self.slider.valueChanged.connect(self.update_plot_data)
+        # self.slider.setTickPosition(QSlider.TicksBelow)
+        # self.sliderLayout.addWidget(self.slider)
 
         # Add the plots and slider layouts to the main layout
         self.mainLayout.addWidget(self.graphWidgetLayout)
-        self.mainLayout.addLayout(self.sliderLayout)
+        # self.mainLayout.addLayout(self.sliderLayout)
 
         # Set the main layout as the central widget
         self.centralWidget = QWidget()
@@ -121,13 +126,10 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.timer.timeout.connect(self.update_plot_data)
         # self.timer.start()
 
-    def update_slider_value(self, value):
-        self.slider_value = value
+    # def update_slider_value(self, value):
+        # self.slider_value = value
         
     def update_plot_data(self, value):
-        self.slider_value = value
-
-        print(value)
         self.slider_value = value
 
         start = 0
