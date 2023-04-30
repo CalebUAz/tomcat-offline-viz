@@ -61,7 +61,7 @@ class MyWidget(QWidget):
         slider.setMaximum(50)
         slider.setGeometry(200, 1200, 100, 200)
         slider.setRange(0, 49)
-        slider.valueChanged.connect(window.load_image)
+        slider.valueChanged.connect(window.changedValue)
         slider.valueChanged.connect(signal_fNIRS.update_plot_data)
         slider.valueChanged.connect(topo_fNIRS.slider_moved)
         slider.valueChanged.connect(signal_EEG.update_plot_data)

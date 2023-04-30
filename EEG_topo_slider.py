@@ -141,9 +141,19 @@ class TopoMainWindow(QtWidgets.QMainWindow):
             data_time_window = filtered_band_data_dict[band_name][:, start_idx:end_idx]
             data_avg = np.mean(data_time_window, axis=1)
 
-            mne.viz.plot_topomap(data_avg[:21], info, axes=ax, extrapolate='head', sensors=True, outlines='head', names=channels_used[:21], show=False)
+            img, _ = mne.viz.plot_topomap(data_avg[:21], info, axes=ax, extrapolate='head', sensors=True, outlines='head', names=channels_used[:21], show=False)
             ax.set_title(f'{band_name.capitalize()} ({l_freq}-{h_freq} Hz)')
-        
+
+            # Get the min and max values from the data
+            vmin = data_avg[:21].min()
+            vmax = data_avg[:21].max()
+
+            # Create a colorbar for the topomap plot
+            cbar = self.figure.colorbar(img, ax=ax, boundaries=np.linspace(vmin, vmax, 256), pad=0.15)
+
+            # Set a label for the colorbar
+            cbar.set_label('(T/m)²/Hz')
+
         self.canvas.draw()
 
     def update_topomap(self, value):

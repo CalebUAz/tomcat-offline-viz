@@ -41,6 +41,10 @@ class Window(QWidget):
     def InitWindow(self):
         # hbox = QHBoxLayout()
 
+        min, max, self.screenshots, self.screenshot_paths = read_screenshots()
+        # print(min, max)
+        self.x, self.y, point_scale, id_labels = read_pupil_data()
+
         # Create a vertical layout for the button
         vbox = QVBoxLayout()
 
@@ -60,16 +64,14 @@ class Window(QWidget):
         self.slider_text.setGeometry(200, 1590, width_slider_text, 100)
 
         # Create the list of image paths
-        self.csv_data = []
+        # self.csv_data = []
 
         # Load the images in the background
-        cwd = os.getcwd()
-        data_path = os.path.join(cwd, "data/Screenshots/Screenshots/")
-        self.image_loader = ImageLoader(data_path)
-        self.image_loader.loaded.connect(self.add_image_path_to_list)
-        self.image_loader.start()
-
-        self.x, self.y, point_scale, id_labels = read_pupil_data()
+        # cwd = os.getcwd()
+        # data_path = os.path.join(cwd, "data/Screenshots/Screenshots/")
+        # self.image_loader = ImageLoader(data_path)
+        # self.image_loader.loaded.connect(self.add_image_path_to_list)
+        # self.image_loader.start()
 
         # self.ScreenShot = QLabel(self)
         # # self.ScreenShot.setPixmap(QPixmap(self.screenshots[0]))
@@ -109,6 +111,8 @@ class Window(QWidget):
         self.show()
 
     def changedValue(self, value):
+        self.label_name.setText(self.screenshot_paths[value])
+
         # change value of the slider when you move the slider and switch to the next img
         start = time.process_time()
 
@@ -119,68 +123,77 @@ class Window(QWidget):
 
         if x_value is not None and y_value is not None:
             cv2.circle(rgb_image, (int(x_value), int(y_value)),
-                       5, (255, 0, 0), 2)
+                       15, (0, 255, 0), 5)
 
-        h, w, ch = rgb_image.shape
+        # Calculate the width and height for the adjusted image
+        widget_width = self.ScreenShot.width()
+        widget_height = self.ScreenShot.height()
+        adjusted_width = int(widget_width * 1)
+        adjusted_height = int(widget_height * 0.5)
+
+        # Resize the image to the adjusted size
+        resized_image = cv2.resize(rgb_image, (adjusted_width, adjusted_height))
+
+        h, w, ch = resized_image.shape
         bytes_per_line = ch * w
         convert_to_Qt_format = QtGui.QImage(
-            rgb_image, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
+            resized_image, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
         self.ScreenShot.setPixmap(QPixmap.fromImage(convert_to_Qt_format))
 
         # val = self.slider.value()
         # self.slider_text.setText(str(val))
         # print('Time taken by changedValue:', time.process_time() - start)
 
-    def add_image_path_to_list(self, index, path):
-        self.csv_data.append(path)
+    # def add_image_path_to_list(self, index, path):
+    #     self.csv_data.append(path)
 
-        if index == len(self.csv_data) - 1:
-            self.load_image(0)
+    #     if index == len(self.csv_data) - 1:
+    #         self.load_image(0)
 
-    def load_image(self, value):
-        # Load the image and display it in the label
-        path = self.csv_data[value]
-        pixmap = QPixmap(path)
+    # def load_image(self, value):
+    #     # Load the image and display it in the label
+    #     path = self.csv_data[value]
+    #     pixmap = QPixmap(path)
 
-        # Set the label name
-        label_name = os.path.basename(path)
-        self.label_name.setText(label_name)
+    #     # Set the label name
+    #     label_name = os.path.basename(path)
+    #     self.label_name.setText(label_name)
 
-        # Load the pupil data
-        x, y, _, _ = read_pupil_data()
+    #     # Load the pupil data
+    #     x, y, _, _ = read_pupil_data()
 
-        # Get the pupil data for the current image
-        pupil_x = x.get(value, None)
-        pupil_y = y.get(value, None)
+    #     # Get the pupil data for the current image
+    #     pupil_x = x.get(value, None)
+    #     pupil_y = y.get(value, None)
 
-        if pupil_x is not None and pupil_y is not None:
-            # Calculate the center and radius of the circle
-            center = (int(pupil_x), int(pupil_y))
-            radius = 15
+    #     if pupil_x is not None and pupil_y is not None:
+    #         # Calculate the center and radius of the circle
+    #         center = (int(pupil_x), int(pupil_y))
+    #         radius = 15
 
-            # Draw the circle on the screenshot image
-            image = cv2.imread(path)
-            cv2.circle(image, center, radius, (0, 255, 0), 5)
+    #         # Draw the circle on the screenshot image
+    #         image = cv2.imread(path)
+    #         cv2.circle(image, center, radius, (0, 255, 0), 5)
 
-            # Calculate the width and height for the adjusted image
-            widget_width = self.ScreenShot.width()
-            widget_height = self.ScreenShot.height()
-            adjusted_width = int(widget_width * 1)
-            adjusted_height = int(widget_height * 0.5)
+    #         # Calculate the width and height for the adjusted image
+    #         widget_width = self.ScreenShot.width()
+    #         widget_height = self.ScreenShot.height()
+    #         adjusted_width = int(widget_width * 1)
+    #         adjusted_height = int(widget_height * 0.5)
             
-            # Convert the OpenCV image to a QPixmap and display it in the label
-            rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    #         # Convert the OpenCV image to a QPixmap and display it in the label
+    #         rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             
-            # Resize the image to the adjusted size
-            resized_image = cv2.resize(rgb_image, (adjusted_width, adjusted_height))
+    #         # Resize the image to the adjusted size
+    #         resized_image = cv2.resize(rgb_image, (adjusted_width, adjusted_height))
             
-            h, w, ch = resized_image.shape
-            bytes_per_line = ch * w
-            convert_to_Qt_format = QtGui.QImage(
-                resized_image, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
-            self.ScreenShot.setPixmap(QPixmap.fromImage(convert_to_Qt_format))
+    #         h, w, ch = resized_image.shape
+    #         bytes_per_line = ch * w
+    #         convert_to_Qt_format = QtGui.QImage(
+    #             resized_image, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
+    #         self.ScreenShot.setPixmap(QPixmap.fromImage(convert_to_Qt_format))
             
-            self.slider_text.setText("Slider value: {}".format(value))
+    #         self.slider_text.setText("Slider value: {}".format(value))
 
 
 if __name__ == '__main__':
