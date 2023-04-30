@@ -20,8 +20,20 @@ class MyWidget(QWidget):
         self.initUI()
 
     def initUI(self):
+        # Get the screen resolution
+        screen_resolution = QApplication.desktop().screenGeometry()
+
+        # Calculate the desired position and size based on screen resolution
+        x = int(screen_resolution.width() * 0.1)
+        y = int(screen_resolution.height() * 0.1)
+        width = int(screen_resolution.width() * 0.8)
+        height = int(screen_resolution.height() * 0.8)
+
         # Set the position and size of the widget
-        self.setGeometry(200, 200, 400, 300)
+        self.setGeometry(x, y, width, height)
+        
+        # Set the position and size of the widget
+        # self.setGeometry(200, 200, 400, 300)
 
         view_Label = QLabel("")
         slider = QSlider(Qt.Horizontal, self)
@@ -168,4 +180,5 @@ class MyWidget(QWidget):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     widget = MyWidget()
+    widget.show
     sys.exit(app.exec_())
