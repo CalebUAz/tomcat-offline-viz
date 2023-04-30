@@ -120,12 +120,21 @@ class Window(QWidget):
 
         if x_value is not None and y_value is not None:
             cv2.circle(rgb_image, (int(x_value), int(y_value)),
-                       5, (255, 0, 0), 2)
+                       15, (0, 255, 0), 5)
 
-        h, w, ch = rgb_image.shape
+        # Calculate the width and height for the adjusted image
+        widget_width = self.ScreenShot.width()
+        widget_height = self.ScreenShot.height()
+        adjusted_width = int(widget_width * 1)
+        adjusted_height = int(widget_height * 0.5)
+
+        # Resize the image to the adjusted size
+        resized_image = cv2.resize(rgb_image, (adjusted_width, adjusted_height))
+
+        h, w, ch = resized_image.shape
         bytes_per_line = ch * w
         convert_to_Qt_format = QtGui.QImage(
-            rgb_image, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
+            resized_image, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
         self.ScreenShot.setPixmap(QPixmap.fromImage(convert_to_Qt_format))
 
         # val = self.slider.value()
