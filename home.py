@@ -3,7 +3,7 @@ import time
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QTabWidget, QSpacerItem, QSizePolicy, QSlider, QStackedWidget, QFrame
 import cv2
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtGui import QPixmap, QImage, QPainter, QFont
 from matplotlib.widgets import SliderBase
 
 from fnirs_slider import MainWindow
@@ -40,12 +40,6 @@ class MyWidget(QWidget):
         fNIRS = QVBoxLayout()
         EEG = QVBoxLayout()
 
-        # Create a QFrame and set the layout as its layout
-        # frame = QFrame()
-        # frame_sub_layout1 = QFrame()
-        # frame_eye_tracking = QFrame()
-        # frame_fNIRS = QFrame()
-
         # Set the position and size of the widget
         self.setGeometry(x, y, width, height)
 
@@ -65,7 +59,7 @@ class MyWidget(QWidget):
 
         slider.setMinimum(0)
         slider.setMaximum(50)
-        slider.setGeometry(200, 2000, 100, 20)
+        slider.setGeometry(200, 1200, 100, 200)
         slider.setRange(0, 49)
         slider.valueChanged.connect(window.load_image)
         slider.valueChanged.connect(signal_fNIRS.update_plot_data)
@@ -86,7 +80,7 @@ class MyWidget(QWidget):
         # Set custom dimensions for each label
         view_Label_fNIRS.setFixedSize(int(width * 0.3), 50)
         view_Label_EEG.setFixedSize(int(width * 0.3), 50)
-        slider.setFixedSize(1400, 50)
+        slider.setFixedSize(1400, 150)
 
         # Set the stretch factor for the main layout to make box 1 take 2/3 of the vertical space
         main_layout.addLayout(sub_layout1)

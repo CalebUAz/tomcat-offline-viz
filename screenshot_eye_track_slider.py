@@ -54,7 +54,7 @@ class Window(QWidget):
         # self.slider.setTickPosition(QSlider.TicksBelow)
 
         self.slider_text = QLabel(self)
-        self.slider_text.setGeometry(200, 2150, 150, 20)
+        self.slider_text.setGeometry(200, 1590, 150, 200)
 
         # min, max, self.screenshots = read_screenshots()
         # print(min, max)
@@ -160,14 +160,24 @@ class Window(QWidget):
 
             # Draw the circle on the screenshot image
             image = cv2.imread(path)
-            cv2.circle(image, center, radius, (0, 0, 255), 5)
+            cv2.circle(image, center, radius, (0, 255, 0), 5)
 
+            # Calculate the width and height for the adjusted image
+            widget_width = self.ScreenShot.width()
+            widget_height = self.ScreenShot.height()
+            adjusted_width = int(widget_width * 1)
+            adjusted_height = int(widget_height * 0.6)
+            
             # Convert the OpenCV image to a QPixmap and display it in the label
             rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            h, w, ch = rgb_image.shape
+            
+            # Resize the image to the adjusted size
+            resized_image = cv2.resize(rgb_image, (adjusted_width, adjusted_height))
+            
+            h, w, ch = resized_image.shape
             bytes_per_line = ch * w
             convert_to_Qt_format = QtGui.QImage(
-                rgb_image, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
+                resized_image, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
             self.ScreenShot.setPixmap(QPixmap.fromImage(convert_to_Qt_format))
             
             self.slider_text.setText("Slider value: {}".format(value))
