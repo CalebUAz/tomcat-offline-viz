@@ -41,7 +41,7 @@ class Window(QWidget):
     def InitWindow(self):
         # hbox = QHBoxLayout()
 
-        min, max, self.screenshots = read_screenshots()
+        min, max, self.screenshots, self.screenshot_paths = read_screenshots()
         # print(min, max)
         self.x, self.y, point_scale, id_labels = read_pupil_data()
 
@@ -108,6 +108,8 @@ class Window(QWidget):
         self.show()
 
     def changedValue(self, value):
+        self.label_name.setText(self.screenshot_paths[value])
+
         # change value of the slider when you move the slider and switch to the next img
         start = time.process_time()
 

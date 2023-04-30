@@ -73,6 +73,7 @@ import numpy as np
 def read_screenshots():
     start = time.process_time()
     images = []
+    image_paths = []
     cwd = os.getcwd()
     data_path = os.path.join(cwd, "data/Screenshots/Screenshots/*.*")
     for cnt, im_path in enumerate(sorted(glob.glob(data_path))):
@@ -86,8 +87,11 @@ def read_screenshots():
         # Read the image using PIL.Image and convert it to an OpenCV compatible format
         img = Image.open(io.BytesIO(img_data))
         img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+
+        label_name = os.path.basename(im_path)
+        image_paths.append(label_name)
         
         images.append(img)
     
     print(time.process_time() - start)
-    return 0, 50, images
+    return 0, 50, images, image_paths
