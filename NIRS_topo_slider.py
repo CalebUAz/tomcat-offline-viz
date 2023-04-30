@@ -167,7 +167,7 @@ class TopoMainWindow(QtWidgets.QMainWindow):
         self.setCentralWidget(self.centralWidget)
 
         # Create initial figure and canvas
-        self.figure = plt.figure(figsize=(8, 8))
+        self.figure = plt.figure(figsize=(5, 12))
         self.canvas = FigureCanvas(self.figure)
         self.graphWidgetLayout.addWidget(self.canvas)
 
@@ -175,6 +175,7 @@ class TopoMainWindow(QtWidgets.QMainWindow):
 
     def plot_topomap(self):
         self.canvas.figure.clear()
+        self.canvas.figure.subplots_adjust(left=0.1)
 
         hbo_data = self.fnirs_data[41:61, self.slider_value:self.slider_value+100]
         hbr_data = self.fnirs_data[61:81, self.slider_value:self.slider_value+100]
@@ -217,7 +218,9 @@ class TopoMainWindow(QtWidgets.QMainWindow):
         cbar_hbr = self.canvas.figure.colorbar(img_hbr, ax=axes[1], boundaries=np.linspace(self.mean_hbr_timeavg.min(), self.mean_hbr_timeavg.max(), 256))
         cbar_hbr.set_label('HbR μM')
 
+        self.canvas.figure.tight_layout()
         self.canvas.draw()
+
 
     def update_topomap(self, value):
         self.slider_value = value
