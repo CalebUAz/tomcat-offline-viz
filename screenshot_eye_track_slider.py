@@ -11,6 +11,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from PyQt5.QtCore import Qt, QThread, pyqtSignal
 import os
 
+
 class ImageLoader(QThread):
     loaded = pyqtSignal(int, str)
 
@@ -19,11 +20,14 @@ class ImageLoader(QThread):
         self.folder_path = folder_path
 
     def run(self):
-        png_files = [f for f in os.listdir(self.folder_path) if f.endswith('.png')]
+        png_files = [f for f in os.listdir(
+            self.folder_path) if f.endswith('.png')]
         png_files.sort()
         for i, f in enumerate(png_files):
             image_path = os.path.join(self.folder_path, f)
             self.loaded.emit(i, image_path)
+
+
 class Window(QWidget):
     def __init__(self):
         super().__init__()
@@ -35,7 +39,7 @@ class Window(QWidget):
         self.InitWindow()
 
     def InitWindow(self):
-        hbox = QHBoxLayout()
+        # hbox = QHBoxLayout()
 
         # Create a vertical layout for the button
         vbox = QVBoxLayout()
@@ -67,24 +71,34 @@ class Window(QWidget):
 
         self.x, self.y, point_scale, id_labels = read_pupil_data()
 
-        self.ScreenShot = QLabel(self)
-        # self.ScreenShot.setPixmap(QPixmap(self.screenshots[0]))
-        self.ScreenShot.setGeometry(100, 100, 1280, 720)
+        # self.ScreenShot = QLabel(self)
+        # # self.ScreenShot.setPixmap(QPixmap(self.screenshots[0]))
+        # self.ScreenShot.setGeometry(100, 100, 640, 720)
 
+        self.label_name = QLabel(self)
+        self.label_name.setGeometry(50, 50, 640, 50)
+        self.label_name.setStyleSheet("background-color: rgba(255, 255, 255, 100); padding: 2px;")
+        vbox.addWidget(self.label_name)
+
+        self.ScreenShot = QLabel(self)
+        self.ScreenShot.setGeometry(100, 100, 640, 360)
+
+        # Add the screenshot to the vertical layout
+        vbox.addWidget(self.ScreenShot)
         # Add the slider to the vertical layout
         # vbox.addWidget(self.slider)
         # Add the vertical layout to the horizontal layout
-        hbox.addLayout(vbox)
+        # hbox.addLayout(vbox)
 
         self.setWindowIcon(QtGui.QIcon("icon.png"))
         self.setWindowTitle(self.title)
         self.setGeometry(self.top, self.left, self.width, self.height)
 
-        self.setLayout(hbox)
+        self.setLayout(vbox)
         self.setGeometry(self.left, self.top, self.width, self.height)
 
-        self.ScreenShot = QLabel(self)
-        self.ScreenShot.setGeometry(100, 100, 1280, 720)
+        # self.ScreenShot = QLabel(self)
+        # self.ScreenShot.setGeometry(100, 100, 1280, 720)
 
         self.show()
 
@@ -119,8 +133,13 @@ class Window(QWidget):
 
     def load_image(self, value):
         # Load the image and display it in the label
-        pixmap = QPixmap(self.csv_data[value])
+        path = self.csv_data[value]
+        pixmap = QPixmap(path)
         self.ScreenShot.setPixmap(pixmap)
+
+        # Set the label name
+        label_name = os.path.basename(path)
+        self.label_name.setText(label_name)
 
 if __name__ == '__main__':
     App = QApplication(sys.argv)
