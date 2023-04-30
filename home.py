@@ -30,15 +30,13 @@ class MyWidget(QWidget):
         signal_EEG = WindowEEG()
         topo_fNIRS = TopoMainWindow()
 
-
         slider.setMinimum(0)
         slider.setMaximum(50)
         slider.setGeometry(200, 2000, 100, 20)
         slider.setRange(0, 49)
         slider.valueChanged.connect(window.load_image)
-        # slider.sliderMoved[int].connect(window.changedValue)
-        # slider.valueChanged.connect(signal.update_plot_data)
-        slider.valueChanged.connect(signal.slider_moved)
+        slider.valueChanged.connect(signal_fNIRS.update_plot_data)
+        slider.valueChanged.connect(topo_fNIRS.slider_moved)
         slider.setTickPosition(QSlider.TicksBelow)
 
         slider_text = QLabel(self)
