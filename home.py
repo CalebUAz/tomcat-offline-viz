@@ -5,12 +5,14 @@ import cv2
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage
 from matplotlib.widgets import SliderBase
+
 from fnirs_slider import MainWindow
 from NIRS_topo_slider import TopoMainWindow
 
 from screenshot_eye_track_slider import Window
-from screenshot_eye_track_slider import Window as WindowEEG
 
+from EEG_slider import MainWindow as WindowEEG
+from EEG_topo_slider import TopoMainWindow as TopoMainWindowEEG
 
 class MyWidget(QWidget):
     def __init__(self):
@@ -29,6 +31,7 @@ class MyWidget(QWidget):
         signal_fNIRS = MainWindow()
         signal_EEG = WindowEEG()
         topo_fNIRS = TopoMainWindow()
+        topo_EEG = TopoMainWindowEEG()
 
         slider.setMinimum(0)
         slider.setMaximum(50)
@@ -37,6 +40,8 @@ class MyWidget(QWidget):
         slider.valueChanged.connect(window.load_image)
         slider.valueChanged.connect(signal_fNIRS.update_plot_data)
         slider.valueChanged.connect(topo_fNIRS.slider_moved)
+        slider.valueChanged.connect(signal_EEG.update_plot_data)
+        slider.valueChanged.connect(topo_EEG.slider_moved)
         slider.setTickPosition(QSlider.TicksBelow)
 
         slider_text = QLabel(self)
@@ -92,14 +97,13 @@ class MyWidget(QWidget):
         stacked_widget.addWidget(topo_fNIRS)
 
         # Create the second view (View 2) and add it to the stacked widget
-        view2 = QLabel("View 2 EEG Topological")
-        view2.setStyleSheet("border: 1px solid black;")
-        stacked_widget.addWidget(view2)
+        # view2 = QLabel("View 2 EEG Topological")
+        # view2.setStyleSheet("border: 1px solid black;")
+        stacked_widget.addWidget(topo_EEG)
 
         def switchButton1View():
             button1_property = button.property("value")
             button2_property = buttonView.property("value")
-            print("Button1: ", button1_property, button2_property)
             if button1_property == "fNIRS":
                 button.setProperty("value", "EEG")
                 if button2_property == "signal":
@@ -116,7 +120,6 @@ class MyWidget(QWidget):
         def switchButton2View():
             button1_property = button.property("value")
             button2_property = buttonView.property("value")
-            print("Button2: ", button1_property, button2_property)
             if button2_property == "signal":
                 buttonView.setProperty("value", "topological")
                 if button1_property == "fNIRS":

@@ -17,7 +17,7 @@ class TopoMainWindow(QtWidgets.QMainWindow):
 
         # Replace 'your_xdf_file.xdf' with your XDF file path
         cwd = os.getcwd()
-        data_path = os.path.join(cwd, "data/lion_eeg_fnirs_pupil.xdf")
+        data_path = os.path.join(cwd, "data/XDF/lion_eeg_fnirs_pupil.xdf")
         data_xdf, header = pyxdf.load_xdf(data_path)
 
         self.fnirs_data = None
@@ -148,18 +148,18 @@ class TopoMainWindow(QtWidgets.QMainWindow):
         self.graphWidgetLayout = QVBoxLayout()
 
         # Create and configure the slider layout
-        self.sliderLayout = QHBoxLayout()
-        self.slider = QSlider(Qt.Horizontal, self)
-        self.slider.setTickInterval(1)
-        self.slider.setMinimum(0)
-        self.slider.setMaximum(1000)
-        self.slider.valueChanged.connect(self.slider_moved)
-        self.slider.setTickPosition(QSlider.TicksBelow)
-        self.sliderLayout.addWidget(self.slider)
+        # self.sliderLayout = QHBoxLayout()
+        # self.slider = QSlider(Qt.Horizontal, self)
+        # self.slider.setTickInterval(1)
+        # self.slider.setMinimum(0)
+        # self.slider.setMaximum(1000)
+        # self.slider.valueChanged.connect(self.slider_moved)
+        # self.slider.setTickPosition(QSlider.TicksBelow)
+        # self.sliderLayout.addWidget(self.slider)
 
         # Add the plots and slider layouts to the main layout
         self.mainLayout.addLayout(self.graphWidgetLayout)
-        self.mainLayout.addWidget(self.slider)  # Change this line
+        # self.mainLayout.addWidget(self.slider)  # Change this line
 
         # Set the main layout as the central widget
         self.centralWidget = QWidget()
@@ -180,8 +180,7 @@ class TopoMainWindow(QtWidgets.QMainWindow):
         # Get the time points for each window
         self.canvas.figure.clear()
 
-        hbo_data = self.fnirs_data[41:61,self.slider_value:self.slider_value+100]
-        print(hbo_data)
+        hbo_data = self.fnirs_data[41:61,self.slider_value:self.slider_value+10]
         n_samples = hbo_data.shape[1]
 
         window_starts = np.arange(0, n_samples, int(self.window_size * self.sfreq))
@@ -210,7 +209,6 @@ class TopoMainWindow(QtWidgets.QMainWindow):
         self.canvas.draw()
 
     def update_topomap(self, value):
-        print(value)
         self.slider_value = value
 
         # Call plot_topomap to update the plot

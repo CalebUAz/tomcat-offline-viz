@@ -4,6 +4,7 @@ from PyQt5.QtCore import Qt
 import pyqtgraph as pg
 import sys
 import pandas as pd
+import os
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -71,7 +72,10 @@ class MainWindow(QtWidgets.QMainWindow):
             "AUX_EKG",
         ]
 
-        data = pd.read_csv("/Users/calebjonesshibu/Desktop/tom/exp_2023_02_03_10/tiger/eeg_fnirs_pupil/eeg_fnirs_pupil/EEG.csv",sep = '\t')
+        cwd = os.getcwd()
+        data_path = os.path.join(cwd, "data/EEG/EEG.csv")
+
+        data = pd.read_csv(data_path,sep = '\t')
         # Get the index of channel that are being used.
         self.channel_indices = [data.columns.get_loc(channel) for channel in self.channels_used]
 
@@ -88,18 +92,18 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphWidgetLayout.resize(1000, 2500)
 
         # Create and configure the slider layout
-        self.sliderLayout = QHBoxLayout()
-        self.slider = QSlider(Qt.Horizontal, self)
-        self.slider.setTickInterval(1)
-        self.slider.setMinimum(0)
-        self.slider.setMaximum(1000)
-        self.slider.valueChanged.connect(self.update_plot_data)
-        self.slider.setTickPosition(QSlider.TicksBelow)
-        self.sliderLayout.addWidget(self.slider)
+        # self.sliderLayout = QHBoxLayout()
+        # self.slider = QSlider(Qt.Horizontal, self)
+        # self.slider.setTickInterval(1)
+        # self.slider.setMinimum(0)
+        # self.slider.setMaximum(1000)
+        # self.slider.valueChanged.connect(self.update_plot_data)
+        # self.slider.setTickPosition(QSlider.TicksBelow)
+        # self.sliderLayout.addWidget(self.slider)
 
         # Add the plots and slider layouts to the main layout
         self.mainLayout.addWidget(self.graphWidgetLayout)
-        self.mainLayout.addLayout(self.sliderLayout)
+        # self.mainLayout.addLayout(self.sliderLayout)
 
         # Set the main layout as the central widget
         self.centralWidget = QWidget()
@@ -168,9 +172,12 @@ class MainWindow(QtWidgets.QMainWindow):
     def update_plot_data(self, value):
         self.slider_value = value
 
-        window_size = 1000
-        start = max(0, int(len(self.data1) * (self.slider_value / 1000) - window_size // 2))
-        end = min(len(self.data1), start + window_size)
+        # window_size = 1000
+        # start = max(0, int(len(self.data1) * (self.slider_value / 1000) - window_size // 2))
+        # end = min(len(self.data1), start + window_size)
+
+        start = 0
+        end = min (len (self.data1), value)
 
         self.x = list(range(start, end))
 

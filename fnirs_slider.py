@@ -51,18 +51,18 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphWidgetLayout.resize(1000, 2500)
 
         # Create and configure the slider layout
-        self.sliderLayout = QHBoxLayout()
-        self.slider = QSlider(Qt.Horizontal, self)
-        self.slider.setTickInterval(1)
-        self.slider.setMinimum(0)
-        self.slider.setMaximum(1000)
-        self.slider.valueChanged.connect(self.update_plot_data)
-        self.slider.setTickPosition(QSlider.TicksBelow)
-        self.sliderLayout.addWidget(self.slider)
+        # self.sliderLayout = QHBoxLayout()
+        # self.slider = QSlider(Qt.Horizontal, self)
+        # self.slider.setTickInterval(1)
+        # self.slider.setMinimum(0)
+        # self.slider.setMaximum(1000)
+        # self.slider.valueChanged.connect(self.update_plot_data)
+        # self.slider.setTickPosition(QSlider.TicksBelow)
+        # self.sliderLayout.addWidget(self.slider)
 
         # Add the plots and slider layouts to the main layout
         self.mainLayout.addWidget(self.graphWidgetLayout)
-        self.mainLayout.addLayout(self.sliderLayout)
+        # self.mainLayout.addLayout(self.sliderLayout)
 
         # Set the main layout as the central widget
         self.centralWidget = QWidget()
@@ -126,15 +126,17 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.timer.timeout.connect(self.update_plot_data)
         # self.timer.start()
 
-    def update_slider_value(self, value):
-        self.slider_value = value
+    # def update_slider_value(self, value):
+        # self.slider_value = value
         
     def update_plot_data(self, value):
         self.slider_value = value
 
-        window_size = 100
-        start = max(0, int(len(self.data1) * (self.slider_value / 1000) - window_size // 2))
-        end = min(len(self.data1), start + window_size)
+        # window_size = 100
+        # start = max(0, int(len(self.data1) * (self.slider_value / 1000) - window_size // 2))
+        # end = min(len(self.data1), start + window_size)
+        start = 0
+        end = min (len (self.data1), value)
 
         self.x = list(range(start, end))
 
