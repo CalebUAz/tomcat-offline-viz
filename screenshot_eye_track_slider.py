@@ -57,8 +57,11 @@ class Window(QWidget):
         # self.slider.sliderMoved[int].connect(self.changedValue)
         # self.slider.setTickPosition(QSlider.TicksBelow)
 
-        # self.slider_text = QLabel(self)
-        # self.slider_text.setGeometry(200, 1590, 150, 200)
+        self.slider_text = QLabel(self)
+        screen_resolution = QApplication.desktop().screenGeometry()
+        width_slider_text = int(screen_resolution.width() * 0.4)
+        # height_slider_text = int(screen_resolution.height() * 0.9)
+        self.slider_text.setGeometry(200, 1590, width_slider_text, 100)
 
         # Create the list of image paths
         # self.csv_data = []
@@ -77,10 +80,10 @@ class Window(QWidget):
         self.label_name = QLabel(self)
         # self.label_name.setGeometry(50, 50, 640, 10)
         screen_resolution = QApplication.desktop().screenGeometry()
-        width_label = int(screen_resolution.width() * 0.4)
+        width_label = int(screen_resolution.width() * 0.5)
         height_label = int(screen_resolution.height() * 0.9)
         self.label_name.setFixedSize(width_label, 50)
-        self.label_name.setStyleSheet("background-color: rgba(255, 255, 255, 100); padding: 2px;")
+        self.label_name.setStyleSheet("background-color: rgba(102, 102, 255, 100); padding: 2px;")
         vbox.addWidget(self.label_name)
 
         self.ScreenShot = QLabel(self)
@@ -99,8 +102,8 @@ class Window(QWidget):
         self.setFixedSize(width_label, height_label)
 
         self.setLayout(vbox)
-        self.setGeometry(self.left, self.top, width_label, height_label)
-        self.setFixedSize(width_label, height_label)
+        # self.setGeometry(self.left, self.top, width_label, height_label)
+        # self.setFixedSize(width_label, height_label)
 
         # self.ScreenShot = QLabel(self)
         # self.ScreenShot.setGeometry(100, 100, 1280, 720)
