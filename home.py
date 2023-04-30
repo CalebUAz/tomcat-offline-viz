@@ -3,7 +3,7 @@ import time
 from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QTabWidget, QSpacerItem, QSizePolicy, QSlider, QStackedWidget, QFrame
 import cv2
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QImage, QPainter, QFont
+from PyQt5.QtGui import QPixmap, QImage, QPainter, QFont, QColor
 from matplotlib.widgets import SliderBase
 
 from fnirs_slider import MainWindow
@@ -72,9 +72,9 @@ class MyWidget(QWidget):
         view_Label_fNIRS.setStyleSheet("border: 1px solid black;")
         view_Label_EEG.setStyleSheet("border: 1px solid black;")
         view_Label_fNIRS.setStyleSheet(
-            "background-color: rgba(255, 255, 255, 100); padding: 2px;")
+            "background-color: rgba(102, 102, 255, 100); padding: 2px;")
         view_Label_EEG.setStyleSheet(
-            "background-color: rgba(255, 255, 255, 100); padding: 2px;")
+            "background-color: rgba(102, 102, 255, 100); padding: 2px;")
         slider.setStyleSheet("border: 1px solid black;")
 
         # Set custom dimensions for each label
@@ -124,10 +124,10 @@ class MyWidget(QWidget):
             # if button1_property == "fNIRS":
             # button_fNIRS.setProperty("value", "EEG")
             if button1_property == "signal":
-                button_EEG.setProperty("value", "topological")
+                button_fNIRS.setProperty("value", "topological")
                 stacked_widget_fNIRS.setCurrentIndex(1)
             elif button1_property == "topological":
-                button_EEG.setProperty("value", "signal")
+                button_fNIRS.setProperty("value", "signal")
                 stacked_widget_fNIRS.setCurrentIndex(0)
             # elif button1_property == "EEG":
             #     button_fNIRS.setProperty("value", "fNIRS")
@@ -158,6 +158,8 @@ class MyWidget(QWidget):
         button_fNIRS = QPushButton('fNIRS signal/Topo', self)
         # Set the property of button1 to indicate its value
         button_fNIRS.setProperty("value", "signal")
+        color = QColor(102, 102, 255, 127)  # Purple color
+        button_fNIRS.setStyleSheet("background-color: {}".format(color.name()))
 
         # Connect the button's clicked signal to a function
         button_fNIRS.clicked.connect(switchButton_fNIRS)
@@ -166,6 +168,8 @@ class MyWidget(QWidget):
         button_EEG = QPushButton('EEG signal/Topo', self)
         # Set the property of button2 to indicate its value
         button_EEG.setProperty("value", "signal")
+        color = QColor(102, 102, 255, 215)  # Purple color
+        button_EEG.setStyleSheet("background-color: {}".format(color.name()))
 
         # Connect the button's clicked signal to a function
         button_EEG.clicked.connect(switchButton_EEG)
