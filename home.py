@@ -6,6 +6,7 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPixmap, QImage
 from matplotlib.widgets import SliderBase
 from fnirs_slider import MainWindow
+from NIRS_topo_slider import TopoMainWindow
 
 from screenshot_eye_track_slider import Window
 from screenshot_eye_track_slider import Window as WindowEEG
@@ -27,11 +28,17 @@ class MyWidget(QWidget):
         window = Window()
         signal_fNIRS = MainWindow()
         signal_EEG = WindowEEG()
+        topo_fNIRS = TopoMainWindow()
+
 
         slider.setMinimum(0)
         slider.setMaximum(50)
         slider.setGeometry(200, 2000, 100, 20)
-        slider.sliderMoved[int].connect(window.changedValue)
+        slider.setRange(0, 49)
+        slider.valueChanged.connect(window.load_image)
+        # slider.sliderMoved[int].connect(window.changedValue)
+        # slider.valueChanged.connect(signal.update_plot_data)
+        slider.valueChanged.connect(signal.slider_moved)
         slider.setTickPosition(QSlider.TicksBelow)
 
         slider_text = QLabel(self)
@@ -74,27 +81,6 @@ class MyWidget(QWidget):
         # Set the stretch factor for box 1 in the second row layout to make it 2/3 of the row's width
         sub_layout2.addLayout(slider_box)
 
-        # Define the function for Button 1 to switch between View 1 and View 2
-        # def switchButton1View():
-        #     current_index = stacked_widget.currentIndex()
-            
-        #     if current_index == 0:
-        #         view_Label.setText("Button 1 Text")
-        #         stacked_widget.setCurrentIndex(1)
-        #     else:
-        #         view_Label.setText("Button 1 Text")
-        #         stacked_widget.setCurrentIndex(0)
-
-        # # Define the function for Button 2 to switch between View 1 and View 2
-        # def switchButton2View():
-        #     current_index = stacked_widget.currentIndex()
-        #     if current_index == 2:
-        #         view_Label.setText("Button 1 Text")
-        #         stacked_widget.setCurrentIndex(3)
-        #     else:
-        #         view_Label.setText("Button 1 Text")
-        #         stacked_widget.setCurrentIndex(2)
-
         # Create the stacked widget for the views in Box 2
         stacked_widget = QStackedWidget()
 
@@ -105,9 +91,7 @@ class MyWidget(QWidget):
         stacked_widget.addWidget(signal_EEG)
 
         # Create the second view (View 2) and add it to the stacked widget
-        view2 = QLabel("View 2 fNIRS Topological ")
-        view2.setStyleSheet("border: 1px solid black;")
-        stacked_widget.addWidget(view2)
+        stacked_widget.addWidget(topo_fNIRS)
 
         # Create the second view (View 2) and add it to the stacked widget
         view2 = QLabel("View 2 EEG Topological")
