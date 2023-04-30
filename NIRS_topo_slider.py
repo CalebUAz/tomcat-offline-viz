@@ -17,7 +17,7 @@ class TopoMainWindow(QtWidgets.QMainWindow):
 
         # Replace 'your_xdf_file.xdf' with your XDF file path
         cwd = os.getcwd()
-        data_path = os.path.join(cwd, "data/XDF/lion_eeg_fnirs_pupil.xdf")
+        data_path = os.path.join(cwd, "data/XDF/tiger_eeg_fnirs_pupil.xdf")
         data_xdf, header = pyxdf.load_xdf(data_path)
 
         self.fnirs_data = None

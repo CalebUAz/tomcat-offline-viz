@@ -15,7 +15,7 @@ class TopoMainWindow(QtWidgets.QMainWindow):
         self.slider_value = 0
 
         cwd = os.getcwd()
-        data_path = os.path.join(cwd, "data/XDF/lion_eeg_fnirs_pupil.xdf")
+        data_path = os.path.join(cwd, "data/XDF/tiger_eeg_fnirs_pupil.xdf")
         data_xdf, header = pyxdf.load_xdf(data_path)
 
         # Load the EEG data into a NumPy array
