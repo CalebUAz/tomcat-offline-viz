@@ -90,25 +90,25 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphWidgetLayout.resize(1000, 2500)
 
         # Create and configure the slider layout
-        self.sliderLayout = QHBoxLayout()
-        self.slider = QSlider(Qt.Horizontal, self)
-        self.slider.setTickInterval(1)
-        self.slider.setMinimum(0)
-        self.slider.setMaximum(1000)
-        self.slider.valueChanged.connect(self.update_plot_data)
-        self.slider.setTickPosition(QSlider.TicksBelow)
-        self.sliderLayout.addWidget(self.slider)
+        # self.sliderLayout = QHBoxLayout()
+        # self.slider = QSlider(Qt.Horizontal, self)
+        # self.slider.setTickInterval(1)
+        # self.slider.setMinimum(0)
+        # self.slider.setMaximum(1000)
+        # self.slider.valueChanged.connect(self.update_plot_data)
+        # self.slider.setTickPosition(QSlider.TicksBelow)
+        # self.sliderLayout.addWidget(self.slider)
 
         # Add the plots and slider layouts to the main layout
         self.mainLayout.addWidget(self.graphWidgetLayout)
-        self.mainLayout.addLayout(self.sliderLayout)
+        # self.mainLayout.addLayout(self.sliderLayout)
 
         # Set the main layout as the central widget
         self.centralWidget = QWidget()
         self.centralWidget.setLayout(self.mainLayout)
         self.setCentralWidget(self.centralWidget)
 
-         # Enable antialiasing for prettier plots
+        # Enable antialiasing for prettier plots
 
         pg.setConfigOptions(antialias=True)
 
