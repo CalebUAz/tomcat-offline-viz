@@ -127,9 +127,11 @@ class MainWindow(QtWidgets.QMainWindow):
     def update_plot_data(self, value):
         self.slider_value = value
 
-        window_size = 1000
-        start = max(0, int(len(self.data1) * (self.slider_value / 1000) - window_size // 2))
-        end = min(len(self.data1), start + window_size)
+        print(value)
+        self.slider_value = value
+
+        start = 0
+        end = min(len(self.data1), value)
 
         self.x = list(range(start, end))
 
