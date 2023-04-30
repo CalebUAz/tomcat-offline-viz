@@ -118,7 +118,7 @@ class TopoMainWindow(QtWidgets.QMainWindow):
 
         # Create initial figure and canvas
         # Create initial figure and canvas
-        self.figure = plt.figure(figsize=(15, 12))
+        self.figure = plt.figure(figsize=(5, 12))
         self.canvas = FigureCanvas(self.figure)
         self.graphWidgetLayout.addWidget(self.canvas)
 
@@ -131,11 +131,12 @@ class TopoMainWindow(QtWidgets.QMainWindow):
 
     def plot_topomap(self, start_sample, num_samples, frequency_bands, filtered_band_data_dict, info, channels_used):
         self.canvas.figure.clear()
+        self.canvas.figure.subplots_adjust(left=0.1)
 
         start_idx = start_sample
         end_idx = start_sample + num_samples
 
-        axes = self.figure.subplots(nrows=5, ncols=1)
+        axes = self.figure.subplots(nrows=5, ncols=1, gridspec_kw={'hspace': 0.5, 'wspace': 0.3})
 
         for (band_name, (l_freq, h_freq)), ax in zip(frequency_bands.items(), axes.flatten()[:5]):
             data_time_window = filtered_band_data_dict[band_name][:, start_idx:end_idx]
@@ -154,7 +155,9 @@ class TopoMainWindow(QtWidgets.QMainWindow):
             # Set a label for the colorbar
             cbar.set_label('(T/m)²/Hz')
 
+        self.canvas.figure.tight_layout()
         self.canvas.draw()
+
 
     def update_topomap(self, value):
         self.slider_value = value
