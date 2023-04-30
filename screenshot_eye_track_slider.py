@@ -53,11 +53,14 @@ class Window(QWidget):
         # self.slider.sliderMoved[int].connect(self.changedValue)
         # self.slider.setTickPosition(QSlider.TicksBelow)
 
-        # self.slider_text = QLabel(self)
-        # self.slider_text.setGeometry(200, 850, 150, 20)
+        self.slider_text = QLabel(self)
+        self.slider_text.setGeometry(200, 2150, 150, 20)
 
         # min, max, self.screenshots = read_screenshots()
         # print(min, max)
+
+        # Create the list of image paths
+        self.csv_data = []
 
         # Load the images in the background
         cwd = os.getcwd()
@@ -65,9 +68,6 @@ class Window(QWidget):
         self.image_loader = ImageLoader(data_path)
         self.image_loader.loaded.connect(self.add_image_path_to_list)
         self.image_loader.start()
-
-        # Create the list of image paths
-        self.csv_data = []
 
         self.x, self.y, point_scale, id_labels = read_pupil_data()
 
@@ -135,11 +135,37 @@ class Window(QWidget):
         # Load the image and display it in the label
         path = self.csv_data[value]
         pixmap = QPixmap(path)
-        self.ScreenShot.setPixmap(pixmap)
 
         # Set the label name
         label_name = os.path.basename(path)
         self.label_name.setText(label_name)
+
+        # Load the pupil data
+        x, y, _, _ = read_pupil_data()
+
+        # Get the pupil data for the current image
+        pupil_x = x.get(value, None)
+        pupil_y = y.get(value, None)
+
+        if pupil_x is not None and pupil_y is not None:
+            # Calculate the center and radius of the circle
+            center = (int(pupil_x), int(pupil_y))
+            radius = 15
+
+            # Draw the circle on the screenshot image
+            image = cv2.imread(path)
+            cv2.circle(image, center, radius, (0, 0, 255), 5)
+
+            # Convert the OpenCV image to a QPixmap and display it in the label
+            rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            h, w, ch = rgb_image.shape
+            bytes_per_line = ch * w
+            convert_to_Qt_format = QtGui.QImage(
+                rgb_image, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
+            self.ScreenShot.setPixmap(QPixmap.fromImage(convert_to_Qt_format))
+            
+            self.slider_text.setText("Slider value: {}".format(value))
+
 
 if __name__ == '__main__':
     App = QApplication(sys.argv)

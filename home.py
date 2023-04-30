@@ -56,9 +56,6 @@ class MyWidget(QWidget):
         slider.valueChanged.connect(topo_EEG.slider_moved)
         slider.setTickPosition(QSlider.TicksBelow)
 
-        slider_text = QLabel(self)
-        slider_text.setGeometry(200, 850, 150, 20)
-
         # Add a border style to each label
         view_Label.setStyleSheet("border: 1px solid black;")
         slider.setStyleSheet("border: 1px solid black;")
