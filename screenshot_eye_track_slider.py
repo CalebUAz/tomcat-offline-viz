@@ -166,7 +166,7 @@ class Window(QWidget):
             widget_width = self.ScreenShot.width()
             widget_height = self.ScreenShot.height()
             adjusted_width = int(widget_width * 1)
-            adjusted_height = int(widget_height * 0.6)
+            adjusted_height = int(widget_height * 0.5)
             
             # Convert the OpenCV image to a QPixmap and display it in the label
             rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
