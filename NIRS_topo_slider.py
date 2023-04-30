@@ -171,39 +171,49 @@ class TopoMainWindow(QtWidgets.QMainWindow):
         self.plot_topomap()
 
     def plot_topomap(self):
-        # Move the code for creating the topomap plot (from "fig, ax = plt.subplots(figsize=(8, 8))" to "plt.show()") here
-        # You should replace "plt.show()" with "self.graphWidgetLayout.addWidget(self.canvas)"
-        # Don't forget to indent properly
-        # Get the time points for each window
         self.canvas.figure.clear()
 
-        hbo_data = self.fnirs_data[41:61,self.slider_value:self.slider_value+100]
-        print(hbo_data)
+        hbo_data = self.fnirs_data[41:61, self.slider_value:self.slider_value+100]
+        hbr_data = self.fnirs_data[61:81, self.slider_value:self.slider_value+100]
+
         n_samples = hbo_data.shape[1]
 
         window_starts = np.arange(0, n_samples, int(self.window_size * self.sfreq))
         window_ends = window_starts + int(self.window_size * self.sfreq)
         window_starts = window_starts[:len(window_ends)]
 
-        # Calculate the mean HbO data for each window
+        # Calculate the mean HbO and HbR data for each window
         mean_hbo = []
+        mean_hbr = []
         for start, end in zip(window_starts, window_ends):
             mean_hbo.append(np.mean(hbo_data[:, start:end], axis=1))
+            mean_hbr.append(np.mean(hbr_data[:, start:end], axis=1))
         mean_hbo = np.array(mean_hbo).T
-        
+        mean_hbr = np.array(mean_hbr).T
+
         self.channel_positions = self.channel_positions
         self.mean_hbo_timeavg = np.mean(mean_hbo, axis=1)
+        self.mean_hbr_timeavg = np.mean(mean_hbr, axis=1)
 
-        # Calculate the maximum absolute value of the data
-        # max_value = np.max(np.abs(self.mean_hbo_timeavg))
+        # Create a (2, 1) grid of subplots for HbO and HbR topomaps
+        axes = self.canvas.figure.subplots(nrows=2, ncols=1)
 
-        # Set vlim to -max_value and max_value
-        # vlim = (-max_value, max_value)
+        # Plot HbO topomap
+        img_hbo, _ = mne.viz.plot_topomap(self.mean_hbo_timeavg, self.channel_positions/1000, cmap='bwr', sensors=True, show=False, outlines='head', extrapolate='local', res=128, image_interp='cubic', names=self.actual_ch_names, sphere=(0, 0, 0, 0.095), axes=axes[0], contours=0)
+        axes[0].set_title('HbO')
 
-        ax = self.canvas.figure.add_subplot(111)
+        # Create a colorbar for the HbO topomap
+        cbar_hbo = self.canvas.figure.colorbar(img_hbo, ax=axes[0], boundaries=np.linspace(self.mean_hbo_timeavg.min(), self.mean_hbo_timeavg.max(), 256))
+        cbar_hbo.set_label('HbO μM')
 
-        mne.viz.plot_topomap(self.mean_hbo_timeavg, self.channel_positions/1000, cmap='bwr', sensors=True, show=False, outlines='head', extrapolate = 'local',res=128,image_interp='cubic',  names=self.actual_ch_names,sphere =  (0, 0, 0, 0.095) , axes=ax, contours=0)
-        
+        # Plot HbR topomap
+        img_hbr, _ = mne.viz.plot_topomap(self.mean_hbr_timeavg, self.channel_positions/1000, cmap='bwr', sensors=True, show=False, outlines='head', extrapolate='local', res=128, image_interp='cubic', names=self.actual_ch_names, sphere=(0, 0, 0, 0.095), axes=axes[1], contours=0)
+        axes[1].set_title('HbR')
+
+        # Create a colorbar for the HbR topomap
+        cbar_hbr = self.canvas.figure.colorbar(img_hbr, ax=axes[1], boundaries=np.linspace(self.mean_hbr_timeavg.min(), self.mean_hbr_timeavg.max(), 256))
+        cbar_hbr.set_label('HbR μM')
+
         self.canvas.draw()
 
     def update_topomap(self, value):
