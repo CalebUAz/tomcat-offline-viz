@@ -78,7 +78,7 @@ class Window(QWidget):
         self.label_name = QLabel(self)
         # self.label_name.setGeometry(50, 50, 640, 10)
         screen_resolution = QApplication.desktop().screenGeometry()
-        width_label = int(screen_resolution.width() * 0.5)
+        width_label = int(screen_resolution.width() * 0.4)
         height_label = int(screen_resolution.height() * 0.9)
         self.label_name.setFixedSize(width_label, 50)
         self.label_name.setStyleSheet("background-color: rgba(255, 255, 255, 100); padding: 2px;")
