@@ -120,6 +120,10 @@ class TopoMainWindow(QtWidgets.QMainWindow):
         self.canvas = FigureCanvas(self.figure)
         self.graphWidgetLayout.addWidget(self.canvas)
 
+        # Filter the data for each frequency band and store it in the dictionary
+        for band_name, (l_freq, h_freq) in self.frequency_bands.items():
+            filtered_band_data = filtered_raw.copy().filter(l_freq=l_freq, h_freq=h_freq, skip_by_annotation='edge', picks=['eeg'])
+            self.filtered_band_data_dict[band_name] = filtered_band_data.get_data(picks=['eeg', 'misc'])
 
         self.plot_topomap(0, 2500, self.frequency_bands, self.filtered_band_data_dict, self.info, self.channels_used)
 
@@ -129,18 +133,16 @@ class TopoMainWindow(QtWidgets.QMainWindow):
         start_idx = start_sample
         end_idx = start_sample + num_samples
 
-        # Remove the figsize parameter
         axes = self.figure.subplots(nrows=5, ncols=1)
 
         for (band_name, (l_freq, h_freq)), ax in zip(frequency_bands.items(), axes.flatten()[:5]):
-            data_time_window = filtered_band_data_dict[band_name].get_data(picks=['eeg', 'misc'])[:, start_idx:end_idx]
+            data_time_window = filtered_band_data_dict[band_name][:, start_idx:end_idx]
             data_avg = np.mean(data_time_window, axis=1)
 
             mne.viz.plot_topomap(data_avg[:21], info, axes=ax, extrapolate='head', sensors=True, outlines='head', names=channels_used[:21], show=False)
             ax.set_title(f'{band_name.capitalize()} ({l_freq}-{h_freq} Hz)')
         
         self.canvas.draw()
-
 
     def update_topomap(self, value):
         print(value)
