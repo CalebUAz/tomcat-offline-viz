@@ -1,9 +1,9 @@
 import sys
 import time
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QTabWidget, QSpacerItem, QSizePolicy, QSlider, QStackedWidget, QFrame
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QTabWidget, QSpacerItem, QSizePolicy, QSlider, QStackedWidget, QFrame, QLayout
 import cv2
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QImage, QPainter, QFont, QColor
+from PyQt5.QtGui import QPixmap, QImage, QPainter, QFont, QColor, QFontMetrics
 from matplotlib.widgets import SliderBase
 
 from fnirs_slider import MainWindow
@@ -26,30 +26,59 @@ class MyWidget(QWidget):
         screen_resolution = QApplication.desktop().screenGeometry()
 
         # Calculate the desired position and size based on screen resolution
-        x = int(screen_resolution.width() * 0.1)
-        y = int(screen_resolution.height() * 0.1)
-        width = int(screen_resolution.width() * 0.9)
-        height = int(screen_resolution.height() * 0.9)
+        x = int(screen_resolution.width() * 1)
+        y = int(screen_resolution.height() * 1)
+        width = int(screen_resolution.width() * 1)
+        height = int(screen_resolution.height() * 1)
 
         # Create the layout managers
         main_layout = QVBoxLayout()
+        main_layout.setSpacing(0)
+        main_layout.setContentsMargins(0, 0, 0, 0)
 
         # create the first row layout which includes eye-tracking and signal view
         sub_layout1 = QHBoxLayout()
-        eye_tracking = QVBoxLayout()
-        fNIRS = QVBoxLayout()
-        EEG = QVBoxLayout()
+        sub_layout1.setSpacing(0)
+        sub_layout1.setContentsMargins(0, 0, 0, 0)
+        
+        # Create the second row layout
+        sub_layout2 = QHBoxLayout()
+        sub_layout2.setSpacing(0)
+        sub_layout2.setContentsMargins(0, 0, 0, 0)
+
+        # Create the widgets
+        eye_tracking_widget = QWidget()
+        fNIRS_widget = QWidget()
+        EEG_widget = QWidget()
+        slider_widget = QWidget()
+
+        # Set fixed size for the widgets
+        eye_tracking_widget.setFixedSize(int(width * 0.4), int(height * 0.9))
+        fNIRS_widget.setFixedSize(int(width * 0.3), int(height * 0.9))
+        EEG_widget.setFixedSize(int(width * 0.3), int(height * 0.9))
+        slider_widget.setFixedSize(int(width * 0.8), int(height * 0.1))
+
+        # Set margin and padding to 0 for each widget
+        eye_tracking_widget.setContentsMargins(0, 0, 0, 0)
+        fNIRS_widget.setContentsMargins(0, 0, 0, 0)
+        EEG_widget.setContentsMargins(0, 0, 0, 0)
+        slider_widget.setContentsMargins(0, 0, 0, 0)
+
+        # Add widgets to the sub_layout1
+        sub_layout1.addWidget(eye_tracking_widget)
+        sub_layout1.addWidget(fNIRS_widget)
+        sub_layout1.addWidget(EEG_widget)
+
+        sub_layout2.addWidget(slider_widget)
+
+        # Set the size policy for the widgets to Fixed
+        eye_tracking_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        fNIRS_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        EEG_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        slider_widget.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
 
         # Set the position and size of the widget
         self.setGeometry(x, y, width, height)
-
-        # Set the position and size of the widget
-        # self.setGeometry(200, 200, 400, 300)
-
-        view_Label_fNIRS = QLabel("fNIRS")
-        view_Label_EEG = QLabel("EEG")
-        slider = QSlider(Qt.Horizontal, self)
-        slider.setTickInterval(1)
 
         window = Window()
         signal_fNIRS = MainWindow()
@@ -57,134 +86,129 @@ class MyWidget(QWidget):
         topo_fNIRS = TopoMainWindow()
         topo_EEG = TopoMainWindowEEG()
 
+        eye_tracking_layout = QVBoxLayout(eye_tracking_widget)
+        fNIRS_layout = QVBoxLayout(fNIRS_widget)
+        EEG_layout = QVBoxLayout(EEG_widget)
+        slider_box_layout = QVBoxLayout(slider_widget)
+        
+        eye_tracking_layout.setSpacing(0)
+        eye_tracking_layout.setContentsMargins(0, 0, 0, 0)
+        fNIRS_layout.setSpacing(0)
+        fNIRS_layout.setContentsMargins(0, 0, 0, 0)
+        EEG_layout.setSpacing(0)
+        EEG_layout.setContentsMargins(0, 0, 0, 0)
+        slider_box_layout.setSpacing(0)
+        slider_box_layout.setContentsMargins(0, 0, 0, 0)
+
+        # Set font properties
+        font = QFont()
+        font.setFamily("Cambria")
+        font.setPointSize(16)
+        font.setBold(True)
+        alignment = Qt.AlignCenter
+
+        # Label over each fNIRS and EEG widget
+        view_Label_fNIRS = QLabel("fNIRS")
+        view_Label_EEG = QLabel("EEG")
+        view_Label_fNIRS.setFont(font)
+        view_Label_fNIRS.setAlignment(alignment)
+        view_Label_EEG.setFont(font)
+        view_Label_EEG.setAlignment(alignment)
+        view_Label_fNIRS.setContentsMargins(0, 10, 0, 0)
+        view_Label_EEG.setContentsMargins(0, 10, 0, 0)
+
+        # Slider in sub_layout2
+        slider = QSlider(Qt.Horizontal, self)
+        slider.setTickInterval(1)
         slider.setMinimum(0)
         slider.setMaximum(50)
-        slider.setGeometry(200, 1200, 100, 50)
-        slider.setRange(0, 49)
+        slider.setGeometry(50, 1200, 100, 50)
+        slider.setRange(0, 3000)
         slider.valueChanged.connect(window.changedValue)
         slider.valueChanged.connect(signal_fNIRS.update_plot_data)
         slider.valueChanged.connect(topo_fNIRS.slider_moved)
         slider.valueChanged.connect(signal_EEG.update_plot_data)
         slider.valueChanged.connect(topo_EEG.slider_moved)
         slider.setTickPosition(QSlider.TicksBelow)
+        slider.setStyleSheet("border: 1px solid black;")
+        slider.setFixedSize(int(width * 0.9), 50)
+        slider.setFont(font)
+        # slider.setAlignment(alignment)
 
-        # Add a border style to each label
+        # Add a border style to each label and Set custom dimensions
         view_Label_fNIRS.setStyleSheet("border: 1px solid black;")
         view_Label_EEG.setStyleSheet("border: 1px solid black;")
         view_Label_fNIRS.setStyleSheet(
             "background-color: rgba(102, 102, 255, 100); padding: 2px;")
         view_Label_EEG.setStyleSheet(
             "background-color: rgba(102, 102, 255, 100); padding: 2px;")
-        slider.setStyleSheet("border: 1px solid black;")
+        view_Label_fNIRS.setFixedSize(int(width * 0.2), 35)
+        view_Label_EEG.setFixedSize(int(width * 0.2), 35)
 
-        # Set custom dimensions for each label
-        view_Label_fNIRS.setFixedSize(int(width * 0.3), 50)
-        view_Label_EEG.setFixedSize(int(width * 0.3), 50)
-        slider.setFixedSize(1400, 50)
-
-        # Set the stretch factor for the main layout to make box 1 take 2/3 of the vertical space
+        # Adding into the main layout to make row 1 and row 2
         main_layout.addLayout(sub_layout1)
-
-        # Set the stretch factor for box 2 and box 3 to divide the remaining vertical space equally
-        sub_layout1.addLayout(eye_tracking)
-        sub_layout1.addLayout(fNIRS)
-        sub_layout1.addLayout(EEG)
-
-        # Create the second row layout
-        sub_layout2 = QHBoxLayout()
-        slider_box = QVBoxLayout()
-
-        # Set the stretch factor for the second row layout to divide the vertical space equally
         main_layout.addLayout(sub_layout2)
-
-        # Set the stretch factor for box 1 in the second row layout to make it 2/3 of the row's width
-        sub_layout2.addLayout(slider_box)
 
         # Create the stacked widget for the views in Box 2
         stacked_widget_fNIRS = QStackedWidget()
-
-        # Create the first view (View 1) and add it to the stacked widget
         stacked_widget_fNIRS.addWidget(signal_fNIRS)
-
-        # Create the first view (View 1) and add it to the stacked widget
         stacked_widget_fNIRS.addWidget(topo_fNIRS)
 
         # Create the stacked widget for the views in Box 2
         stacked_widget_EEG = QStackedWidget()
-
-        # Create the second view (View 2) and add it to the stacked widget
         stacked_widget_EEG.addWidget(signal_EEG)
-
-        # Create the second view (View 2) and add it to the stacked widget
         stacked_widget_EEG.addWidget(topo_EEG)
 
         def switchButton_fNIRS():
             button1_property = button_fNIRS.property("value")
-            # button2_property = button_EEG.property("value")
-            # if button1_property == "fNIRS":
-            # button_fNIRS.setProperty("value", "EEG")
             if button1_property == "signal":
                 button_fNIRS.setProperty("value", "topological")
                 stacked_widget_fNIRS.setCurrentIndex(1)
             elif button1_property == "topological":
                 button_fNIRS.setProperty("value", "signal")
                 stacked_widget_fNIRS.setCurrentIndex(0)
-            # elif button1_property == "EEG":
-            #     button_fNIRS.setProperty("value", "fNIRS")
-            #     if button2_property == "signal":
-            #         stacked_widget.setCurrentIndex(0)
-            #     elif button2_property == "topological":
-            #         stacked_widget.setCurrentIndex(2)
 
         def switchButton_EEG():
-            # button1_property = button_fNIRS.property("value")
             button2_property = button_EEG.property("value")
-            # if button2_property == "signal":
-            # button_EEG.setProperty("value", "topological")
             if button2_property == "signal":
                 button_EEG.setProperty("value", "topological")
                 stacked_widget_EEG.setCurrentIndex(1)
             elif button2_property == "topological":
                 button_EEG.setProperty("value", "signal")
                 stacked_widget_EEG.setCurrentIndex(0)
-            # elif button2_property == "topological":
-            #     button_EEG.setProperty("value", "signal")
-            #     if button1_property == "fNIRS":
-            #         stacked_widget.setCurrentIndex(0)
-            #     elif button1_property == "EEG":
-            #         stacked_widget.setCurrentIndex(1)
 
         # Create a button
-        button_fNIRS = QPushButton('fNIRS signal/Topo', self)
-        # Set the property of button1 to indicate its value
+        width_button = int(screen_resolution.width() * 0.2)
+        button_fNIRS = QPushButton('Change View', self)
         button_fNIRS.setProperty("value", "signal")
-        color = QColor(102, 102, 255, 127)  # Purple color
-        button_fNIRS.setStyleSheet("background-color: {}".format(color.name()))
-
-        # Connect the button's clicked signal to a function
+        button_fNIRS.setFont(font)
+        button_fNIRS.setFixedSize(width_button, 35)
+        color = QColor(102, 102, 255, 100)  # Purple color
+        button_fNIRS.setStyleSheet("background-color: rgba({}, {}, {}, {});".format(color.red(), color.green(), color.blue(), color.alpha()))
+        # button_fNIRS.setStyleSheet("font-weight: bold; text-align: center;")
         button_fNIRS.clicked.connect(switchButton_fNIRS)
 
         # Create a button
-        button_EEG = QPushButton('EEG signal/Topo', self)
-        # Set the property of button2 to indicate its value
+        button_EEG = QPushButton('Change View', self)
         button_EEG.setProperty("value", "signal")
-        color = QColor(102, 102, 255, 215)  # Purple color
-        button_EEG.setStyleSheet("background-color: {}".format(color.name()))
-
-        # Connect the button's clicked signal to a function
+        button_EEG.setFont(font)
+        button_EEG.setFixedSize(width_button, 35)
+        color = QColor(102, 102, 255, 100)  # Purple color
+        button_EEG.setStyleSheet("background-color: rgba({}, {}, {}, {});".format(color.red(), color.green(), color.blue(), color.alpha()))
+        # button_EEG.setStyleSheet("font-weight: bold; text-align: center;")
         button_EEG.clicked.connect(switchButton_EEG)
 
         # Add the labels to the respective layouts
-        eye_tracking.addWidget(window)
-        fNIRS.addWidget(view_Label_fNIRS)
-        fNIRS.addWidget(stacked_widget_fNIRS)
-        fNIRS.addWidget(button_fNIRS)
+        eye_tracking_layout.addWidget(window)
+        fNIRS_layout.addWidget(view_Label_fNIRS, alignment=Qt.AlignCenter)
+        fNIRS_layout.addWidget(stacked_widget_fNIRS, alignment=Qt.AlignCenter)
+        fNIRS_layout.addWidget(button_fNIRS, alignment=Qt.AlignCenter)
 
-        EEG.addWidget(view_Label_EEG)
-        EEG.addWidget(stacked_widget_EEG)
-        EEG.addWidget(button_EEG)
+        EEG_layout.addWidget(view_Label_EEG, alignment=Qt.AlignCenter)
+        EEG_layout.addWidget(stacked_widget_EEG, alignment=Qt.AlignCenter)
+        EEG_layout.addWidget(button_EEG, alignment=Qt.AlignCenter)
 
-        slider_box.addWidget(slider)
+        slider_box_layout.addWidget(slider)
 
         self.setLayout(main_layout)
 

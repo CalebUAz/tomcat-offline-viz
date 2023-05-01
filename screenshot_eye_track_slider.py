@@ -3,7 +3,7 @@ from PyQt5 import QtGui
 from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QSlider, QLabel, QVBoxLayout
 import sys
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtGui import QPixmap, QImage, QFont
 from utils import read_screenshots, read_pupil_data
 import time
 import cv2
@@ -71,20 +71,31 @@ class Window(QWidget):
         # # self.ScreenShot.setPixmap(QPixmap(self.screenshots[0]))
         # self.ScreenShot.setGeometry(100, 100, 640, 720)
 
+        # Set font properties
+        font = QFont()
+        font.setFamily("Cambria")
+        font.setPointSize(16)
+        font.setBold(True)
+        alignment = Qt.AlignCenter
+
         self.label_name = QLabel(self)
         # self.label_name.setGeometry(50, 50, 640, 10)
         screen_resolution = QApplication.desktop().screenGeometry()
-        width_label = int(screen_resolution.width() * 0.5)
+        width_label = int(screen_resolution.width() * 0.4)
         height_label = int(screen_resolution.height() * 0.9)
-        self.label_name.setFixedSize(width_label, 50)
-        self.label_name.setStyleSheet("background-color: rgba(102, 102, 255, 100); padding: 2px;")
+        self.label_name.setFixedSize(width_label, 35)
+        self.label_name.setFont(font)
+        self.label_name.setAlignment(alignment)
+        self.label_name.setStyleSheet("background-color: rgba(102, 102, 255, 100); padding: 1px;")
         self.label_name.setText(self.screenshot_paths[0])
         vbox.addWidget(self.label_name)
 
         self.slider_text = QLabel(self)
         screen_resolution = QApplication.desktop().screenGeometry()
         # self.slider_text.setGeometry(200, 1590, width_slider_text, 50)
-        self.slider_text.setFixedSize(width_label, 50)
+        self.slider_text.setFixedSize(width_label, 35)
+        self.slider_text.setFont(font)
+        self.slider_text.setAlignment(alignment)
         self.slider_text.setStyleSheet("background-color: rgba(102, 102, 255, 100); padding: 2px;")
         self.slider_text.setText("Slider value: {}".format(str(0)))
         vbox.addWidget(self.slider_text)
