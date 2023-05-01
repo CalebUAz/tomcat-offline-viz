@@ -87,6 +87,8 @@ class Window(QWidget):
         vbox.addWidget(self.label_name)
 
         self.ScreenShot = QLabel(self)
+        self.ScreenShot.setPixmap(QPixmap(QImage(self.screenshots[0].data, self.screenshots[0].shape[1], self.screenshots[0].shape[0], QImage.Format_RGB888)))
+
         self.ScreenShot.setGeometry(100, 100, width_label, width_label)
 
         # Add the screenshot to the vertical layout
