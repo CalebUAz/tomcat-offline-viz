@@ -56,13 +56,13 @@ class MyWidget(QWidget):
         eye_tracking_widget.setFixedSize(int(width * 0.4), int(height * 0.9))
         fNIRS_widget.setFixedSize(int(width * 0.3), int(height * 0.9))
         EEG_widget.setFixedSize(int(width * 0.3), int(height * 0.9))
-        slider_widget.setFixedSize(int(width * 0.8), int(height * 0.1))
+        slider_widget.setFixedSize(int(width * 1), int(height * 0.1))
 
         # Set margin and padding to 0 for each widget
         eye_tracking_widget.setContentsMargins(0, 0, 0, 0)
         fNIRS_widget.setContentsMargins(0, 0, 0, 0)
         EEG_widget.setContentsMargins(0, 0, 0, 0)
-        slider_widget.setContentsMargins(0, 0, 0, 0)
+        slider_widget.setContentsMargins(100, 0, 0, 0)
 
         # Add widgets to the sub_layout1
         sub_layout1.addWidget(eye_tracking_widget)
