@@ -73,7 +73,7 @@ class Window(QWidget):
 
         # Set font properties
         font = QFont()
-        font.setFamily("Cambria")
+        font.setFamily("Arial")
         font.setPointSize(16)
         font.setBold(True)
         alignment = Qt.AlignCenter
