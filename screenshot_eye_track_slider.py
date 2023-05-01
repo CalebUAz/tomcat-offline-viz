@@ -57,12 +57,6 @@ class Window(QWidget):
         # self.slider.sliderMoved[int].connect(self.changedValue)
         # self.slider.setTickPosition(QSlider.TicksBelow)
 
-        self.slider_text = QLabel(self)
-        screen_resolution = QApplication.desktop().screenGeometry()
-        width_slider_text = int(screen_resolution.width() * 0.4)
-        # height_slider_text = int(screen_resolution.height() * 0.9)
-        self.slider_text.setGeometry(200, 1590, width_slider_text, 100)
-
         # Create the list of image paths
         # self.csv_data = []
 
@@ -87,10 +81,22 @@ class Window(QWidget):
         self.label_name.setText(self.screenshot_paths[0])
         vbox.addWidget(self.label_name)
 
+        self.slider_text = QLabel(self)
+        screen_resolution = QApplication.desktop().screenGeometry()
+        # self.slider_text.setGeometry(200, 1590, width_slider_text, 50)
+        self.label_name.setFixedSize(width_label, 50)
+        self.slider_text.setStyleSheet("background-color: rgba(102, 102, 255, 100); padding: 2px;")
+        self.slider_text.setText("Slider value: {}".format(str(0)))
+        vbox.addWidget(self.slider_text)
+
         self.ScreenShot = QLabel(self)
         self.ScreenShot.setPixmap(QPixmap(QImage(self.screenshots[0].data, self.screenshots[0].shape[1], self.screenshots[0].shape[0], QImage.Format_RGB888)))
-
-        self.ScreenShot.setGeometry(100, 100, width_label, width_label)
+        # Calculate the width and height for the adjusted image
+        widget_width = self.ScreenShot.width()
+        widget_height = self.ScreenShot.height()
+        adjusted_width = int(widget_width * 1)
+        adjusted_height = int(widget_height * 0.5)
+        self.ScreenShot.setGeometry(100, 100, adjusted_width, adjusted_height)
 
         # Add the screenshot to the vertical layout
         vbox.addWidget(self.ScreenShot)
@@ -143,8 +149,7 @@ class Window(QWidget):
             resized_image, w, h, bytes_per_line, QtGui.QImage.Format_RGB888)
         self.ScreenShot.setPixmap(QPixmap.fromImage(convert_to_Qt_format))
 
-        # val = self.slider.value()
-        # self.slider_text.setText(str(val))
+        self.slider_text.setText("Slider value: {}".format(value))
         # print('Time taken by changedValue:', time.process_time() - start)
 
     # def add_image_path_to_list(self, index, path):
