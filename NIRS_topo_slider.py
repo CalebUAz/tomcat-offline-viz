@@ -24,7 +24,7 @@ class TopoMainWindow(QtWidgets.QMainWindow):
         for stream in data_xdf:
             if stream['info']['type'][0] == 'NIRS':
                 # Extract fNIRS data
-                self.fnirs_data = np.array(stream['time_series']).T
+                self.fnirs_data = np.array(stream['time_series'][902:,:]).T
 
                 # Extract NIRS frequency
                 self.sfreq = int(float(stream['info']['desc'][0]['montage'][0]['sampling_rate'][0]))
