@@ -84,6 +84,7 @@ class Window(QWidget):
         height_label = int(screen_resolution.height() * 0.9)
         self.label_name.setFixedSize(width_label, 50)
         self.label_name.setStyleSheet("background-color: rgba(102, 102, 255, 100); padding: 2px;")
+        self.label_name.setText(self.screenshot_paths[0])
         vbox.addWidget(self.label_name)
 
         self.ScreenShot = QLabel(self)
