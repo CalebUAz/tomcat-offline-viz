@@ -81,7 +81,7 @@ class TopoMainWindow(QtWidgets.QMainWindow):
             'delta': (1, 4),
             'theta': (4, 8),
             'alpha': (8, 14),
-            'beta': (13, 31),
+            'beta': (14, 31),
             'gamma': (31, 50)
         }
 
