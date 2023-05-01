@@ -59,7 +59,7 @@ class MyWidget(QWidget):
 
         slider.setMinimum(0)
         slider.setMaximum(50)
-        slider.setGeometry(200, 1200, 100, 200)
+        slider.setGeometry(200, 1200, 100, 50)
         slider.setRange(0, 49)
         slider.valueChanged.connect(window.changedValue)
         slider.valueChanged.connect(signal_fNIRS.update_plot_data)
@@ -80,7 +80,7 @@ class MyWidget(QWidget):
         # Set custom dimensions for each label
         view_Label_fNIRS.setFixedSize(int(width * 0.3), 50)
         view_Label_EEG.setFixedSize(int(width * 0.3), 50)
-        slider.setFixedSize(1400, 150)
+        slider.setFixedSize(1400, 50)
 
         # Set the stretch factor for the main layout to make box 1 take 2/3 of the vertical space
         main_layout.addLayout(sub_layout1)

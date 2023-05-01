@@ -84,7 +84,7 @@ class Window(QWidget):
         self.slider_text = QLabel(self)
         screen_resolution = QApplication.desktop().screenGeometry()
         # self.slider_text.setGeometry(200, 1590, width_slider_text, 50)
-        self.label_name.setFixedSize(width_label, 50)
+        self.slider_text.setFixedSize(width_label, 50)
         self.slider_text.setStyleSheet("background-color: rgba(102, 102, 255, 100); padding: 2px;")
         self.slider_text.setText("Slider value: {}".format(str(0)))
         vbox.addWidget(self.slider_text)
